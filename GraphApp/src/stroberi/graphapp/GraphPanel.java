@@ -30,6 +30,7 @@ public class GraphPanel extends JPanel{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        g.setFont(new Font("TimesRoman", Font.PLAIN, 16));
 
         // Draw the edges first so that the nodes will be on top of the edges
         for (Edge edge : edges) {
@@ -40,9 +41,18 @@ public class GraphPanel extends JPanel{
 
         // Draw the nodes
         for (Node node : nodes) {
-            g.drawOval(node.getX(), node.getY(), node.getRadius(), node.getRadius());
-            g.drawString(node.getLabel(), node.getX(), node.getY());
+            g.drawOval(node.getX()-25, node.getY()-25, node.getRadius(), node.getRadius());
+            String label = node.getLabel();
+            if(Integer.parseInt(label) < 10) {
+                g.drawString(label, node.getX()-4, node.getY()+5);
+            } else {
+                g.drawString(label, node.getX()-9, node.getY()+5);
+            }
         }
+    }
+
+    public ArrayList<Node> getNodes() {
+        return nodes;
     }
 
     public void addNode(Node node) {
