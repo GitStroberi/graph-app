@@ -2,18 +2,28 @@ package stroberi.graphapp;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Properties;
 
-import stroberi.graphapp.MouseListener;
-public class GraphPanel extends JPanel {
+public class GraphPanel extends JPanel{
+    Properties prop = new Properties();
     private ArrayList<Node> nodes;
     private ArrayList<Edge> edges;
 
-    public GraphPanel() {
+    public GraphPanel() throws IOException {
+
+        String projectPath = System.getProperty("user.dir");
+        try {
+            prop.loadFromXML(new FileInputStream(projectPath + "/src/stroberi/graphapp/config.xml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         nodes = new ArrayList<Node>();
         edges = new ArrayList<Edge>();
 
-        MouseListener mouseListener = new MouseListener();
+        MouseListener mouseListener = new MouseListener(this);
         addMouseListener(mouseListener);
     }
 
@@ -41,5 +51,13 @@ public class GraphPanel extends JPanel {
 
     public void addEdge(Edge edge) {
         edges.add(edge);
+    }
+
+    public int nodeSize() {
+        return Integer.parseInt(prop.getProperty("nodeSize"));
+    }
+
+    public int nodeCount() {
+        return nodes.size();
     }
 }
