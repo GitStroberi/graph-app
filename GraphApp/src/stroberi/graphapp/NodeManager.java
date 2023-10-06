@@ -1,6 +1,5 @@
 package stroberi.graphapp;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class NodeManager {
@@ -8,7 +7,7 @@ public class NodeManager {
     private ArrayList<Node> selectedNodes;
     public NodeManager(GraphPanel graphPanel) {
         this.graphPanel = graphPanel;
-        this.selectedNodes = new ArrayList<>();
+        this.selectedNodes = graphPanel.getSelectedNodes();
     }
 
     public Node getNodeAt(int x, int y) {
@@ -20,10 +19,23 @@ public class NodeManager {
         return null;
     }
 
-    public Node createNode(int x, int y) {
-        Node newNode = new Node(x, y, graphPanel.nodeSize(), String.valueOf(graphPanel.nodeCount()));
+    public void createNode(int x, int y) {
+        int label;
+        if(graphPanel.getAvailableLabels().isEmpty()){
+            label = graphPanel.nodeCount();
+        }
+        else {
+            label = graphPanel.getAvailableLabels().get(0);
+            graphPanel.removeAvailableLabel(label);
+        }
+        Node newNode = new Node(x, y, graphPanel.nodeSize(), Integer.toString(label));
         graphPanel.addNode(newNode);
-        return newNode;
+    }
+
+    public void removeNode(Node node) {
+        graphPanel.removeNode(node);
+        graphPanel.getSelectedNodes().remove(node);
+        graphPanel.addAvailableLabel(Integer.parseInt(node.getLabel()));
     }
 
     public void toggleNodeSelection(Node node) {
@@ -41,39 +53,6 @@ public class NodeManager {
             selectedNodes.get(0).unselect();
             selectedNodes.remove(0);
         }
-    }
-
-    public void toggleEdge() {
-        if(selectedNodes.size() == 2) {
-            //if there is already an edge between the two nodes, remove it
-            Edge edge = graphPanel.getEdge(selectedNodes.get(0), selectedNodes.get(1));
-            if(edge != null) {
-                removeEdge(edge);
-            }
-            else {
-                createEdge(edge);
-            }
-        }
-    }
-
-    public void createEdge(Edge edge){
-        //if there is no edge between the two nodes, create it
-        edge = new Edge(selectedNodes.get(0), selectedNodes.get(1));
-        graphPanel.addEdge(edge);
-
-        //unselect the nodes
-        selectedNodes.get(0).unselect();
-        selectedNodes.get(1).unselect();
-        selectedNodes.clear();
-    }
-
-    public void removeEdge(Edge edge){
-        graphPanel.removeEdge(edge);
-        System.out.println("Edge removed");
-        //unselect the nodes
-        selectedNodes.get(0).unselect();
-        selectedNodes.get(1).unselect();
-        selectedNodes.clear();
     }
 
     private boolean isClickOnNode(int x, int y, Node node) {

@@ -7,7 +7,6 @@ public class Node {
     private int yOffset; // offset from mouse click to node center
     private int radius;
     private String label;
-
     private boolean selected = false;
 
     public Node(int x, int y, int radius, String label) {
@@ -18,12 +17,12 @@ public class Node {
     }
 
     public void select() {
-        System.out.println("Node " + this.getLabel() + " selected");
+        ///System.out.println("Node " + this.getLabel() + " selected");
         selected = true;
     }
 
     public void unselect() {
-        System.out.println("Node " + this.getLabel() + " unselected");
+        //System.out.println("Node " + this.getLabel() + " unselected");
         selected = false;
     }
 
@@ -44,14 +43,9 @@ public class Node {
         this.yOffset = y - this.y;
     }
 
-    public void updatePosition() {
-        this.x = this.x + this.xOffset;
-        this.y = this.y + this.yOffset;
-    }
-
     public void updatePosition(int x, int y) {
-        this.x = x;
-        this.y = y;
+        this.x = x - xOffset;
+        this.y = y - yOffset;
     }
 
     public int getRadius() {

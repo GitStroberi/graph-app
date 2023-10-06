@@ -10,10 +10,12 @@ public class MouseListener extends MouseAdapter{
     private EdgeManager edgeManager;
     private Node selectedNode;
 
+    private boolean isRightMouseDragging = false;
+
     public MouseListener(GraphPanel graphPanel) {
         this.graphPanel = graphPanel;
         this.nodeManager = new NodeManager(graphPanel);
-        this.edgeManager = new EdgeManager(graphPanel, nodeManager);
+        this.edgeManager = new EdgeManager(graphPanel);
     }
 
     @Override
@@ -21,6 +23,7 @@ public class MouseListener extends MouseAdapter{
         int x = e.getX();
         int y = e.getY();
 
+        //System.out.println(graphPanel.getAvailableLabels());
         // Get the node at the clicked position
         selectedNode = nodeManager.getNodeAt(x, y);
 
@@ -34,29 +37,57 @@ public class MouseListener extends MouseAdapter{
                 nodeManager.toggleNodeSelection(selectedNode);
 
                 // If there are two nodes selected, toggle the edge between them
-                nodeManager.toggleEdge();
+                edgeManager.toggleEdge();
             }
 
             // Repaint the panel
             graphPanel.repaint();
         }
-        else if (SwingUtilities.isRightMouseButton(e)) {
+        else if(SwingUtilities.isRightMouseButton(e)) {
+            // If there is a node at the clicked position, remove it
+            if(selectedNode != null) {
+                edgeManager.removeEdges(selectedNode);
+                nodeManager.removeNode(selectedNode);
+                graphPanel.repaint();
+            }
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e){
+        int x = e.getX();
+        int y = e.getY();
+
+        // Get the node at the clicked position
+        selectedNode = nodeManager.getNodeAt(x, y);
+
+        if (SwingUtilities.isRightMouseButton(e) && selectedNode != null) {
             //calculate the offset of the mouse click from the node's position
             selectedNode.calculateOffsets(x, y);
+            isRightMouseDragging = true;
         }
     }
 
     @Override
     public void mouseDragged(MouseEvent e){
-        if(selectedNode != null && SwingUtilities.isRightMouseButton(e)) {
+        if(isRightMouseDragging) {
             int x = e.getX();
             int y = e.getY();
 
+            //System.out.println("Dragging node " + selectedNode.getLabel());
             //update the node's position
-            selectedNode.updatePosition();
+            selectedNode.updatePosition(x, y);
 
             //repaint the panel
             graphPanel.repaint();
         }
     }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        if(isRightMouseDragging) {
+            isRightMouseDragging = false;
+        }
+    }
+
 }

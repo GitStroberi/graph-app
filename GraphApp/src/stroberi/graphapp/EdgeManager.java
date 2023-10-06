@@ -1,37 +1,59 @@
 package stroberi.graphapp;
 
+import java.util.ArrayList;
+
 public class EdgeManager {
     private GraphPanel graphPanel;
-    private NodeManager nodeManager;
+    private ArrayList<Node> selectedNodes;
 
-    public EdgeManager(GraphPanel graphPanel, NodeManager nodeManager) {
+    public EdgeManager(GraphPanel graphPanel) {
         this.graphPanel = graphPanel;
-        this.nodeManager = nodeManager;
+        this.selectedNodes = graphPanel.getSelectedNodes();
     }
 
-    public Edge createEdge(Node node1, Node node2) {
-        Edge newEdge = new Edge(node1, node2);
-        graphPanel.addEdge(newEdge);
-        return newEdge;
+    public void createEdge(){
+        //if there is no edge between the two nodes, create it
+        Edge edge = new Edge(selectedNodes.get(0), selectedNodes.get(1));
+        graphPanel.addEdge(edge);
+
+        //unselect the nodes
+        selectedNodes.get(0).unselect();
+        selectedNodes.get(1).unselect();
+        selectedNodes.clear();
     }
 
-    public Edge removeEdge(Node node1, Node node2) {
-        Edge edge = graphPanel.getEdge(node1, node2);
+    public void removeEdge(Edge edge){
         graphPanel.removeEdge(edge);
-        return edge;
+        //System.out.println("Edge removed");
+        //unselect the nodes
+        selectedNodes.get(0).unselect();
+        selectedNodes.get(1).unselect();
+        selectedNodes.clear();
     }
 
-    public void updateEdgePosition(Node node){
-        for(Edge edge : graphPanel.getEdges()){
-            //if the node is the start of the edge, update the edge position
-            if(edge.getStart() == node){
-                edge.setStart(node);
+    public void removeEdges(Node node){
+        ArrayList<Edge> edges = graphPanel.getEdges();
+        ArrayList<Edge> edgesToRemove = new ArrayList<>();
+        for(Edge edge : edges){
+            if(edge.getStart() == node || edge.getEnd() == node){
+                edgesToRemove.add(edge);
             }
-            //if the node is the end of the edge, update the edge position
-            else if(edge.getEnd() == node){
-                edge.setEnd(node);
-            }
+        }
+        for(Edge edge : edgesToRemove){
+            graphPanel.removeEdge(edge);
         }
     }
 
+    public void toggleEdge() {
+        if(selectedNodes.size() == 2) {
+            //if there is already an edge between the two nodes, remove it
+            Edge edge = graphPanel.getEdge(selectedNodes.get(0), selectedNodes.get(1));
+            if(edge != null) {
+                removeEdge(edge);
+            }
+            else {
+                createEdge();
+            }
+        }
+    }
 }
