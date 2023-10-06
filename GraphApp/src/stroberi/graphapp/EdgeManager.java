@@ -21,4 +21,17 @@ public class EdgeManager {
         return edge;
     }
 
+    public void updateEdgePosition(Node node){
+        for(Edge edge : graphPanel.getEdges()){
+            //if the node is the start of the edge, update the edge position
+            if(edge.getStart() == node){
+                edge.setStart(node);
+            }
+            //if the node is the end of the edge, update the edge position
+            else if(edge.getEnd() == node){
+                edge.setEnd(node);
+            }
+        }
+    }
+
 }

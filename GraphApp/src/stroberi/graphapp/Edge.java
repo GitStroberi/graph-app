@@ -16,4 +16,12 @@ public class Edge {
     public Node getEnd() {
         return end;
     }
+
+    public void setStart(Node start) {
+        this.start = start;
+    }
+
+    public void setEnd(Node end) {
+        this.end = end;
+    }
 }

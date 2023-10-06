@@ -3,6 +3,8 @@ package stroberi.graphapp;
 public class Node {
     private int x;
     private int y;
+    private int xOffset; // offset from mouse click to node center
+    private int yOffset; // offset from mouse click to node center
     private int radius;
     private String label;
 
@@ -35,6 +37,21 @@ public class Node {
 
     public int getY() {
         return y;
+    }
+
+    public void calculateOffsets(int x, int y) {
+        this.xOffset = x - this.x;
+        this.yOffset = y - this.y;
+    }
+
+    public void updatePosition() {
+        this.x = this.x + this.xOffset;
+        this.y = this.y + this.yOffset;
+    }
+
+    public void updatePosition(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
     public int getRadius() {
