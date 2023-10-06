@@ -3,14 +3,14 @@ package stroberi.graphapp;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Properties;
 
 public class MouseListener extends MouseAdapter{
-
     private GraphPanel graphPanel;
+    private NodeManager nodeManager;
 
     public MouseListener(GraphPanel graphPanel) {
         this.graphPanel = graphPanel;
+        this.nodeManager = new NodeManager(graphPanel);
     }
 
     @Override
@@ -18,30 +18,22 @@ public class MouseListener extends MouseAdapter{
         int x = e.getX();
         int y = e.getY();
 
-        boolean isOnNode = false;
-        Node clickedNode = null;
+        // Get the node at the clicked position
+        Node node = nodeManager.getNodeAt(x, y);
 
-        //check if the click is on a node
-        for(Node node : graphPanel.getNodes()) {
-            if(x >= node.getX()-25 && x <= node.getX()+25 && y >= node.getY()-25 && y <= node.getY()+25) {
-                // click is on a node
-                isOnNode = true;
-                clickedNode = node;
-            }
+        // If there is no node at the clicked position, create a new node
+        if(node == null) {
+            node = nodeManager.createNode(x, y);
+        }
+        else {
+            // If there is a node at the clicked position, toggle its selection
+            nodeManager.toggleNodeSelection(node);
+
+            // If there are two nodes selected, create an edge between them
+            nodeManager.createEdge();
         }
 
-        //if click is not on a node, create a new node
-        if(!isOnNode) {
-            Node newNode = new Node(x, y, graphPanel.nodeSize(), String.valueOf(graphPanel.nodeCount()));
-            graphPanel.addNode(newNode);
-        } else {
-            //if click is on a node, select or unselect the node
-            if(clickedNode.isSelected()) {
-                clickedNode.unselect();
-            } else {
-                clickedNode.select();
-            }
-        }
+
 
         // Repaint the panel
         graphPanel.repaint();
