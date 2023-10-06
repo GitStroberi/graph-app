@@ -51,6 +51,8 @@ public class MouseListener extends MouseAdapter{
                 graphPanel.repaint();
             }
         }
+        graphPanel.getAdjacencyMatrix().populateMatrix();
+        graphPanel.getAdjacencyMatrix().printMatrix();
     }
 
     @Override

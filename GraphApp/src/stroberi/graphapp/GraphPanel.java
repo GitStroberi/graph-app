@@ -10,7 +10,7 @@ public class GraphPanel extends JPanel{
     Properties prop = new Properties();
     private ArrayList<Node> nodes;
     private ArrayList<Edge> edges;
-
+    private AdjacencyMatrix adjacencyMatrix;
     private ArrayList<Integer> availableLabels;
     private ArrayList<Node> selectedNodes;
 
@@ -27,6 +27,7 @@ public class GraphPanel extends JPanel{
         edges = new ArrayList<Edge>();
         availableLabels = new ArrayList<Integer>();
         selectedNodes = new ArrayList<Node>();
+        adjacencyMatrix = new AdjacencyMatrix(10, this);
 
         MouseListener mouseListener = new MouseListener(this);
         addMouseListener(mouseListener);
@@ -35,6 +36,7 @@ public class GraphPanel extends JPanel{
 
     @Override
     protected void paintComponent(Graphics g) {
+
         super.paintComponent(g);
         super.setBackground(Color.DARK_GRAY);
         g.setFont(new Font("TimesRoman", Font.PLAIN, 16));
@@ -77,6 +79,10 @@ public class GraphPanel extends JPanel{
 
     public ArrayList<Edge> getEdges() {
         return edges;
+    }
+
+    public AdjacencyMatrix getAdjacencyMatrix() {
+        return adjacencyMatrix;
     }
 
     public void addNode(Node node) {
