@@ -29,8 +29,8 @@ public class MouseListener extends MouseAdapter{
             // If there is a node at the clicked position, toggle its selection
             nodeManager.toggleNodeSelection(node);
 
-            // If there are two nodes selected, create an edge between them
-            nodeManager.createEdge();
+            // If there are two nodes selected, toggle the edge between them
+            nodeManager.toggleEdge();
         }
 
 

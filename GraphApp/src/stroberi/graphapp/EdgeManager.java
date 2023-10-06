@@ -16,17 +16,9 @@ public class EdgeManager {
     }
 
     public Edge removeEdge(Node node1, Node node2) {
-        Edge edge = getEdge(node1, node2);
+        Edge edge = graphPanel.getEdge(node1, node2);
         graphPanel.removeEdge(edge);
         return edge;
     }
 
-    public Edge getEdge(Node node1, Node node2) {
-        for (Edge edge : graphPanel.getEdges()) {
-            if (edge.getStart() == node1 && edge.getEnd() == node2) {
-                return edge;
-            }
-        }
-        return null;
-    }
 }

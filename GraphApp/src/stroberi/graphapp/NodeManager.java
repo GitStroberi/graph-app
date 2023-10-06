@@ -26,11 +26,6 @@ public class NodeManager {
         return newNode;
     }
 
-    public void toggleEdge(Node start, Node end) {
-        //if there is already an edge between the two nodes, remove it
-
-    }
-
     public void toggleNodeSelection(Node node) {
         if(selectedNodes.contains(node)) {
             node.unselect();
@@ -47,30 +42,38 @@ public class NodeManager {
             selectedNodes.remove(0);
         }
     }
-    
-    public void createEdge() {
+
+    public void toggleEdge() {
         if(selectedNodes.size() == 2) {
             //if there is already an edge between the two nodes, remove it
             Edge edge = graphPanel.getEdge(selectedNodes.get(0), selectedNodes.get(1));
             if(edge != null) {
-                graphPanel.removeEdge(edge);
-
-                //unselect the nodes
-                selectedNodes.get(0).unselect();
-                selectedNodes.get(1).unselect();
-                selectedNodes.clear();
+                removeEdge(edge);
             }
             else {
-                //if there is no edge between the two nodes, create it
-                edge = new Edge(selectedNodes.get(0), selectedNodes.get(1));
-                graphPanel.addEdge(edge);
-
-                //unselect the nodes
-                selectedNodes.get(0).unselect();
-                selectedNodes.get(1).unselect();
-                selectedNodes.clear();
+                createEdge(edge);
             }
         }
+    }
+
+    public void createEdge(Edge edge){
+        //if there is no edge between the two nodes, create it
+        edge = new Edge(selectedNodes.get(0), selectedNodes.get(1));
+        graphPanel.addEdge(edge);
+
+        //unselect the nodes
+        selectedNodes.get(0).unselect();
+        selectedNodes.get(1).unselect();
+        selectedNodes.clear();
+    }
+
+    public void removeEdge(Edge edge){
+        graphPanel.removeEdge(edge);
+        System.out.println("Edge removed");
+        //unselect the nodes
+        selectedNodes.get(0).unselect();
+        selectedNodes.get(1).unselect();
+        selectedNodes.clear();
     }
 
     private boolean isClickOnNode(int x, int y, Node node) {
