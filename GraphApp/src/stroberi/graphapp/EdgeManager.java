@@ -13,8 +13,11 @@ public class EdgeManager {
 
     public void createEdge(){
         //if there is no edge between the two nodes, create it
+        //for now, we will assume that the edge is undirected so we will create two edges
         Edge edge = new Edge(selectedNodes.get(0), selectedNodes.get(1));
         graphPanel.addEdge(edge);
+        Edge edge2 = new Edge(selectedNodes.get(1), selectedNodes.get(0));
+        graphPanel.addEdge(edge2);
 
         //unselect the nodes
         selectedNodes.get(0).unselect();
@@ -24,6 +27,11 @@ public class EdgeManager {
 
     public void removeEdge(Edge edge){
         graphPanel.removeEdge(edge);
+
+        //remove the other edge for now, we will assume that the edge is undirected
+        Edge edge2 = graphPanel.getEdge(edge.getEnd(), edge.getStart());
+        graphPanel.removeEdge(edge2);
+
         //System.out.println("Edge removed");
         //unselect the nodes
         selectedNodes.get(0).unselect();

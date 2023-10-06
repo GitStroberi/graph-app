@@ -93,8 +93,9 @@ public class GraphPanel extends JPanel{
 
     public Edge getEdge(Node start, Node end) {
         for (Edge edge : edges) {
+            ///if(edge.getStart() == start && edge.getEnd() == end) {
             if(edge.getStart() == start && edge.getEnd() == end || edge.getStart() == end && edge.getEnd() == start) {
-                return edge;
+                    return edge;
             }
         }
         return null;
