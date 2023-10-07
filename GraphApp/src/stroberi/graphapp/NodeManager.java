@@ -30,12 +30,24 @@ public class NodeManager {
         }
         Node newNode = new Node(x, y, graphPanel.nodeSize(), Integer.toString(label));
         graphPanel.addNode(newNode);
+
+        //check if the added label is the biggest label
+        if(label > graphPanel.getBiggestLabel()){
+            graphPanel.setBiggestLabel(label);
+            System.out.println("Biggest label: " + graphPanel.getBiggestLabel());
+        }
     }
 
     public void removeNode(Node node) {
         graphPanel.removeNode(node);
         graphPanel.getSelectedNodes().remove(node);
         graphPanel.addAvailableLabel(Integer.parseInt(node.getLabel()));
+
+        //check if the removed label is the biggest label
+        if(Integer.parseInt(node.getLabel()) == graphPanel.getBiggestLabel()){
+            graphPanel.setBiggestLabel(graphPanel.getBiggestLabel()-1);
+            System.out.println("Biggest label: " + graphPanel.getBiggestLabel());
+        }
     }
 
     public void toggleNodeSelection(Node node) {

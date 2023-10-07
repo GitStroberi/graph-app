@@ -14,6 +14,8 @@ public class GraphPanel extends JPanel{
     private ArrayList<Integer> availableLabels;
     private ArrayList<Node> selectedNodes;
 
+    private int biggestLabel;
+
     public GraphPanel() throws IOException {
 
         String projectPath = System.getProperty("user.dir");
@@ -27,7 +29,8 @@ public class GraphPanel extends JPanel{
         edges = new ArrayList<Edge>();
         availableLabels = new ArrayList<Integer>();
         selectedNodes = new ArrayList<Node>();
-        adjacencyMatrix = new AdjacencyMatrix(10, this);
+        adjacencyMatrix = new AdjacencyMatrix(this);
+        biggestLabel = -1;
 
         MouseListener mouseListener = new MouseListener(this);
         addMouseListener(mouseListener);
@@ -131,5 +134,13 @@ public class GraphPanel extends JPanel{
     }
     public void removeAvailableLabel(int label) {
         availableLabels.remove((Integer) label);
+    }
+
+    public void setBiggestLabel(int label) {
+        biggestLabel = label;
+    }
+
+    public int getBiggestLabel() {
+        return biggestLabel;
     }
 }

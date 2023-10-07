@@ -45,14 +45,12 @@ public class MouseListener extends MouseAdapter{
         }
         else if(SwingUtilities.isRightMouseButton(e)) {
             // If there is a node at the clicked position, remove it
-            if(selectedNode != null) {
+            if (selectedNode != null) {
                 edgeManager.removeEdges(selectedNode);
                 nodeManager.removeNode(selectedNode);
                 graphPanel.repaint();
             }
         }
-        graphPanel.getAdjacencyMatrix().populateMatrix();
-        graphPanel.getAdjacencyMatrix().printMatrix();
     }
 
     @Override
