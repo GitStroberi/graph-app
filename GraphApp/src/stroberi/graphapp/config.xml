@@ -3,4 +3,5 @@
 <properties>
     <entry key="nodeSize">50</entry>
     <entry key="matrixInitSize">10</entry>
+    <entry key="matrixFilePath">src/stroberi/graphapp/matrix.txt</entry>
 </properties>

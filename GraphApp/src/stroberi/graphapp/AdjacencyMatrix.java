@@ -1,16 +1,20 @@
 package stroberi.graphapp;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AdjacencyMatrix {
     private List<List<Integer>> matrix = new ArrayList<List<Integer>>();
-
+    private String filePath;
     private GraphPanel graphPanel;
     private ArrayList<Edge> edges;
 
-    public AdjacencyMatrix(GraphPanel graphPanel) {
+    public AdjacencyMatrix(GraphPanel graphPanel, String filePath) {
         this.graphPanel = graphPanel;
+        this.filePath = filePath;
     }
 
     public void resizeMatrix(int newSize) {
@@ -50,6 +54,7 @@ public class AdjacencyMatrix {
         matrix.get(start).set(end, 0);
         matrix.get(end).set(start, 0);
         printMatrix();
+        saveMatrixToFile();
     }
 
     public void addEdgeToMatrix(Edge edge) {
@@ -61,6 +66,7 @@ public class AdjacencyMatrix {
         matrix.get(start).set(end, 1);
         matrix.get(end).set(start, 1);
         printMatrix();
+        saveMatrixToFile();
     }
 
     public void printMatrix() {
@@ -71,5 +77,18 @@ public class AdjacencyMatrix {
             System.out.println();
         }
         System.out.printf("\n");
+    }
+
+    public void saveMatrixToFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            for (List<Integer> row : matrix) {
+                for (Integer element : row) {
+                    writer.write(element + " ");
+                }
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

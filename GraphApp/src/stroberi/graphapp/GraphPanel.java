@@ -14,6 +14,8 @@ public class GraphPanel extends JPanel{
     private ArrayList<Integer> availableLabels;
     private ArrayList<Node> selectedNodes;
 
+    private String matrixFilePath;
+
     private int biggestLabel;
 
     public GraphPanel() throws IOException {
@@ -29,7 +31,7 @@ public class GraphPanel extends JPanel{
         edges = new ArrayList<Edge>();
         availableLabels = new ArrayList<Integer>();
         selectedNodes = new ArrayList<Node>();
-        adjacencyMatrix = new AdjacencyMatrix(this);
+        adjacencyMatrix = new AdjacencyMatrix(this, prop.getProperty("matrixFilePath"));
         biggestLabel = -1;
 
         MouseListener mouseListener = new MouseListener(this);
