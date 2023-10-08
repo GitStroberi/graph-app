@@ -2,17 +2,18 @@ package stroberi.graphapp;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Properties;
 
 public class GraphPanel extends JPanel{
     Properties prop = new Properties();
-    private ArrayList<Node> nodes;
-    private ArrayList<Edge> edges;
-    private AdjacencyMatrix adjacencyMatrix;
-    private ArrayList<Integer> availableLabels;
-    private ArrayList<Node> selectedNodes;
+    private final ArrayList<Node> nodes;
+    private final ArrayList<Edge> edges;
+    private final AdjacencyMatrix adjacencyMatrix;
+    private final ArrayList<Integer> availableLabels;
+    private final ArrayList<Node> selectedNodes;
     private int biggestLabel;
 
     public GraphPanel() throws IOException {
@@ -24,11 +25,11 @@ public class GraphPanel extends JPanel{
             e.printStackTrace();
         }
 
-        nodes = new ArrayList<Node>();
-        edges = new ArrayList<Edge>();
-        availableLabels = new ArrayList<Integer>();
-        selectedNodes = new ArrayList<Node>();
-        adjacencyMatrix = new AdjacencyMatrix(this, prop.getProperty("matrixFilePath"));
+        nodes = new ArrayList<>();
+        edges = new ArrayList<>();
+        availableLabels = new ArrayList<>();
+        selectedNodes = new ArrayList<>();
+        adjacencyMatrix = new AdjacencyMatrix(prop.getProperty("matrixFilePath"));
         biggestLabel = -1;
 
         MouseListener mouseListener = new MouseListener(this);
@@ -50,6 +51,11 @@ public class GraphPanel extends JPanel{
             g.setColor(Color.WHITE);
             g.drawLine(start.getX(), start.getY(), end.getX(), end.getY());
             g.setColor(Color.BLACK);
+
+            int arrowSize = 10; // Adjust the size as needed
+            int arrowX = end.getX();
+            int arrowY = end.getY();
+            drawArrow(g, start.getX(), start.getY(), arrowX, arrowY, arrowSize, 25);
         }
 
         // Draw the nodes
@@ -74,6 +80,34 @@ public class GraphPanel extends JPanel{
             }
         }
     }
+
+    private void drawArrow(Graphics g, int x1, int y1, int x2, int y2, int size, int distFromNode) {
+        Graphics2D g2 = (Graphics2D) g;
+
+        // Save the current transformation state
+        AffineTransform savedTransform = g2.getTransform();
+
+        double dx = x2 - x1;
+        double dy = y2 - y1;
+        double angle = Math.atan2(dy, dx);
+        int len = (int) Math.sqrt(dx * dx + dy * dy);
+
+        AffineTransform at = AffineTransform.getTranslateInstance(x1, y1);
+        at.concatenate(AffineTransform.getRotateInstance(angle));
+        g2.transform(at);
+
+        // Draw the arrowhead
+        //g2.drawLine(25, 0, len-25, 0);
+        g2.setColor(Color.WHITE);
+        g2.fillPolygon(
+                new int[] { len-distFromNode, len - size - distFromNode, len - size - distFromNode, len - distFromNode },
+                new int[] { 0, -size, size, 0 }, 4);
+        g2.setColor(Color.BLACK);
+
+        // Restore the previous transformation state
+        g2.setTransform(savedTransform);
+    }
+
 
     public AdjacencyMatrix getAdjacencyMatrix() {
         return adjacencyMatrix;
@@ -118,15 +152,12 @@ public class GraphPanel extends JPanel{
     public int nodeSize() {
         return Integer.parseInt(prop.getProperty("nodeSize"));
     }
-
     public int nodeCount() {
         return nodes.size();
     }
-
     public ArrayList<Node> getSelectedNodes() {
         return selectedNodes;
     }
-
     public ArrayList<Integer> getAvailableLabels() {
         return availableLabels;
     }
@@ -136,11 +167,9 @@ public class GraphPanel extends JPanel{
     public void removeAvailableLabel(int label) {
         availableLabels.remove((Integer) label);
     }
-
     public void setBiggestLabel(int label) {
         biggestLabel = label;
     }
-
     public int getBiggestLabel() {
         return biggestLabel;
     }

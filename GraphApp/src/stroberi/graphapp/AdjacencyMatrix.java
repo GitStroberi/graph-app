@@ -7,13 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdjacencyMatrix {
-    private List<List<Integer>> matrix = new ArrayList<List<Integer>>();
+    private List<List<Integer>> matrix = new ArrayList<>();
     private String filePath;
-    private GraphPanel graphPanel;
-    private ArrayList<Edge> edges;
 
-    public AdjacencyMatrix(GraphPanel graphPanel, String filePath) {
-        this.graphPanel = graphPanel;
+    public AdjacencyMatrix(String filePath) {
         this.filePath = filePath;
     }
 
