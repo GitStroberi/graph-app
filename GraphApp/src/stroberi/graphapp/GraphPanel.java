@@ -13,9 +13,6 @@ public class GraphPanel extends JPanel{
     private AdjacencyMatrix adjacencyMatrix;
     private ArrayList<Integer> availableLabels;
     private ArrayList<Node> selectedNodes;
-
-    private String matrixFilePath;
-
     private int biggestLabel;
 
     public GraphPanel() throws IOException {
@@ -78,16 +75,16 @@ public class GraphPanel extends JPanel{
         }
     }
 
+    public AdjacencyMatrix getAdjacencyMatrix() {
+        return adjacencyMatrix;
+    }
+
     public ArrayList<Node> getNodes() {
         return nodes;
     }
 
     public ArrayList<Edge> getEdges() {
         return edges;
-    }
-
-    public AdjacencyMatrix getAdjacencyMatrix() {
-        return adjacencyMatrix;
     }
 
     public void addNode(Node node) {

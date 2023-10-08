@@ -34,8 +34,12 @@ public class NodeManager {
         //check if the added label is the biggest label
         if(label > graphPanel.getBiggestLabel()){
             graphPanel.setBiggestLabel(label);
-            System.out.println("Biggest label: " + graphPanel.getBiggestLabel());
         }
+
+        //resize the adjacency matrix
+        graphPanel.getAdjacencyMatrix().resizeMatrix(graphPanel.getBiggestLabel()+1);
+        graphPanel.getAdjacencyMatrix().printMatrix();
+        graphPanel.getAdjacencyMatrix().saveMatrixToFile();
     }
 
     public void removeNode(Node node) {
@@ -45,9 +49,20 @@ public class NodeManager {
 
         //check if the removed label is the biggest label
         if(Integer.parseInt(node.getLabel()) == graphPanel.getBiggestLabel()){
-            graphPanel.setBiggestLabel(graphPanel.getBiggestLabel()-1);
-            System.out.println("Biggest label: " + graphPanel.getBiggestLabel());
+            //find the new biggest label
+            int biggestLabel = -1;
+            for(Node n : graphPanel.getNodes()){
+                if(Integer.parseInt(n.getLabel()) > biggestLabel){
+                    biggestLabel = Integer.parseInt(n.getLabel());
+                }
+            }
+            graphPanel.setBiggestLabel(biggestLabel);
         }
+
+        //resize the adjacency matrix
+        graphPanel.getAdjacencyMatrix().resizeMatrix(graphPanel.getBiggestLabel()+1);
+        graphPanel.getAdjacencyMatrix().printMatrix();
+        graphPanel.getAdjacencyMatrix().saveMatrixToFile();
     }
 
     public void toggleNodeSelection(Node node) {

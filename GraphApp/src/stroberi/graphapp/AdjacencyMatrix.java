@@ -22,6 +22,7 @@ public class AdjacencyMatrix {
         int currentSize = matrix.size();
         if (newSize < currentSize) {
             // Remove rows and columns to reduce the size
+            System.out.println("newSize: " + newSize + " currentSize: " + currentSize);
             for (int i = currentSize - 1; i >= newSize; i--) {
                 matrix.remove(i);
                 for (List<Integer> row : matrix) {
@@ -30,6 +31,7 @@ public class AdjacencyMatrix {
             }
         } else if (newSize > currentSize) {
             // Add rows and columns to increase the size
+            System.out.println("newSize: " + newSize + " currentSize: " + currentSize);
             for (int i = currentSize; i < newSize; i++) {
                 List<Integer> newRow = new ArrayList<>();
                 for (int j = 0; j < currentSize; j++) {
@@ -46,11 +48,13 @@ public class AdjacencyMatrix {
     }
 
     public void removeEdgeFromMatrix(Edge edge) {
-        int biggestLabel = graphPanel.getBiggestLabel();
-        resizeMatrix(biggestLabel + 1);
+        //int biggestLabel = graphPanel.getBiggestLabel();
+        //resizeMatrix(biggestLabel + 1);
 
         int start = Integer.parseInt(edge.getStart().getLabel());
         int end = Integer.parseInt(edge.getEnd().getLabel());
+
+        //set both the start and end to 0 because the graph is undirected
         matrix.get(start).set(end, 0);
         matrix.get(end).set(start, 0);
         printMatrix();
@@ -58,11 +62,13 @@ public class AdjacencyMatrix {
     }
 
     public void addEdgeToMatrix(Edge edge) {
-        int biggestLabel = graphPanel.getBiggestLabel();
-        resizeMatrix(biggestLabel + 1);
+        //int biggestLabel = graphPanel.getBiggestLabel();
+        //resizeMatrix(biggestLabel + 1);
 
         int start = Integer.parseInt(edge.getStart().getLabel());
         int end = Integer.parseInt(edge.getEnd().getLabel());
+
+        //set both the start and end to 1 because the graph is undirected
         matrix.get(start).set(end, 1);
         matrix.get(end).set(start, 1);
         printMatrix();
