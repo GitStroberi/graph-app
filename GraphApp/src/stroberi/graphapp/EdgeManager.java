@@ -62,8 +62,6 @@ public class EdgeManager {
             else {
                 createEdge();
             }
-            graphPanel.getAdjacencyMatrix().populateMatrix();
-            graphPanel.getAdjacencyMatrix().printMatrix();
         }
     }
 }

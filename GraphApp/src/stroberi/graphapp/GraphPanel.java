@@ -98,6 +98,7 @@ public class GraphPanel extends JPanel{
 
     public void addEdge(Edge edge) {
         edges.add(edge);
+        adjacencyMatrix.addEdgeToMatrix(edge);
     }
 
     public Edge getEdge(Node start, Node end) {
@@ -112,6 +113,7 @@ public class GraphPanel extends JPanel{
 
     public void removeEdge(Edge edge) {
         edges.remove(edge);
+        adjacencyMatrix.removeEdgeFromMatrix(edge);
     }
 
     public int nodeSize() {

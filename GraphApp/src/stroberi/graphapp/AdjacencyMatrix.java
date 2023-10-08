@@ -41,20 +41,26 @@ public class AdjacencyMatrix {
         }
     }
 
-    public void populateMatrix() {
-        // Resize the matrix based on the current biggest label
+    public void removeEdgeFromMatrix(Edge edge) {
         int biggestLabel = graphPanel.getBiggestLabel();
         resizeMatrix(biggestLabel + 1);
 
-        // Populate the matrix with edges
-        List<Edge> edges = graphPanel.getEdges();
-        for (Edge edge : edges) {
-            int start = Integer.parseInt(edge.getStart().getLabel());
-            int end = Integer.parseInt(edge.getEnd().getLabel());
-            printMatrix();
-            matrix.get(start).set(end, 1);
-            matrix.get(end).set(start, 1);
-        }
+        int start = Integer.parseInt(edge.getStart().getLabel());
+        int end = Integer.parseInt(edge.getEnd().getLabel());
+        matrix.get(start).set(end, 0);
+        matrix.get(end).set(start, 0);
+        printMatrix();
+    }
+
+    public void addEdgeToMatrix(Edge edge) {
+        int biggestLabel = graphPanel.getBiggestLabel();
+        resizeMatrix(biggestLabel + 1);
+
+        int start = Integer.parseInt(edge.getStart().getLabel());
+        int end = Integer.parseInt(edge.getEnd().getLabel());
+        matrix.get(start).set(end, 1);
+        matrix.get(end).set(start, 1);
+        printMatrix();
     }
 
     public void printMatrix() {
