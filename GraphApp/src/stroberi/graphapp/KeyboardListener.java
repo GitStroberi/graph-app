@@ -9,7 +9,7 @@ public class KeyboardListener implements KeyListener {
     private EdgeManager edgeManager;
     public KeyboardListener(GraphPanel graphPanel) {
         this.graphPanel = graphPanel;
-        this.edgeManager = new EdgeManager(graphPanel);
+        this.edgeManager = graphPanel.getEdgeManager();
     }
 
     @Override

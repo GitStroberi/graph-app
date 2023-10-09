@@ -14,8 +14,8 @@ public class MouseListener extends MouseAdapter{
 
     public MouseListener(GraphPanel graphPanel) {
         this.graphPanel = graphPanel;
-        this.nodeManager = new NodeManager(graphPanel);
-        this.edgeManager = new EdgeManager(graphPanel);
+        this.nodeManager = graphPanel.getNodeManager();
+        this.edgeManager = graphPanel.getEdgeManager();
     }
 
     @Override

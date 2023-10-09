@@ -17,6 +17,10 @@ public class GraphPanel extends JPanel{
     private int biggestLabel;
     private boolean isDirected = false;
 
+    private NodeManager nodeManager;
+
+    private EdgeManager edgeManager;
+
     public GraphPanel() throws IOException {
 
         String projectPath = System.getProperty("user.dir");
@@ -32,6 +36,9 @@ public class GraphPanel extends JPanel{
         selectedNodes = new ArrayList<>();
         adjacencyMatrix = new AdjacencyMatrix(this, prop.getProperty("matrixFilePath"));
         biggestLabel = -1;
+
+        this.nodeManager = new NodeManager(this);
+        this.edgeManager = new EdgeManager(this);
 
         MouseListener mouseListener = new MouseListener(this);
         addMouseListener(mouseListener);
@@ -197,5 +204,13 @@ public class GraphPanel extends JPanel{
     }
     public boolean getIsDirected() {
         return isDirected;
+    }
+
+    public NodeManager getNodeManager() {
+        return nodeManager;
+    }
+
+    public EdgeManager getEdgeManager() {
+        return edgeManager;
     }
 }
