@@ -17,8 +17,8 @@ public class EdgeManager {
         Edge edge = new Edge(selectedNodes.get(0), selectedNodes.get(1));
         graphPanel.addEdge(edge);
 
-        if(!graphPanel.isDirected()){
-            System.out.println("Entered if because graph is undirected (createEdge)");
+        if(!graphPanel.getIsDirected()){
+            // System.out.println("Entered if because graph is undirected (createEdge)");
             Edge edge2 = new Edge(selectedNodes.get(1), selectedNodes.get(0));
             graphPanel.addEdge(edge2);
         }
@@ -36,15 +36,15 @@ public class EdgeManager {
         //Edge edge2 = graphPanel.getEdge(edge.getEnd(), edge.getStart());
         //graphPanel.removeEdge(edge2);
 
-        if(!graphPanel.isDirected()){
-            System.out.println("Entered if because graph is undirected (removeEdge)");
+        if(!graphPanel.getIsDirected()){
+            // System.out.println("Entered if because graph is undirected (removeEdge)");
             Edge edge2 = graphPanel.getEdge(edge.getEnd(), edge.getStart());
             if (edge2 != null){
-                System.out.println("Also removing edge " + edge2.getStart().getLabel() + " " + edge2.getEnd().getLabel());
+                // System.out.println("Also removing edge " + edge2.getStart().getLabel() + " " + edge2.getEnd().getLabel());
                 graphPanel.removeEdge(edge2);
             }
             else{
-                System.out.println("Edge2 is null");
+                // System.out.println("Edge2 is null");
             }
         }
 
@@ -73,12 +73,28 @@ public class EdgeManager {
             //if there is already an edge between the two nodes, remove it
             Edge edge = graphPanel.getEdge(selectedNodes.get(0), selectedNodes.get(1));
             if(edge != null) {
-                System.out.println("Called removeEdge for " + edge.getStart().getLabel() + " " + edge.getEnd().getLabel());
+                // System.out.println("Called removeEdge for " + edge.getStart().getLabel() + " " + edge.getEnd().getLabel());
                 removeEdge(edge);
             }
             else {
                 createEdge();
             }
         }
+    }
+
+    public void createUndirectedEdges() {
+        // new edge array
+        ArrayList<Edge> newEdges = new ArrayList<>();
+        for(Edge edge : graphPanel.getEdges()) {
+            Edge edge2 = new Edge(edge.getEnd(), edge.getStart());
+            //add the edge to the new edge array only if it doesn't already exist
+            if(!newEdges.contains(edge2)) {
+                newEdges.add(edge2);
+            }
+        }
+        for (Edge edge : newEdges) {
+            graphPanel.addEdge(edge);
+        }
+        graphPanel.getAdjacencyMatrix().saveMatrixToFile();
     }
 }

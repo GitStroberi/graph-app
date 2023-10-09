@@ -6,9 +6,10 @@ import java.awt.event.KeyListener;
 
 public class KeyboardListener implements KeyListener {
     private GraphPanel graphPanel;
-
+    private EdgeManager edgeManager;
     public KeyboardListener(GraphPanel graphPanel) {
         this.graphPanel = graphPanel;
+        this.edgeManager = new EdgeManager(graphPanel);
     }
 
     @Override
@@ -20,8 +21,11 @@ public class KeyboardListener implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         if (key == KeyEvent.VK_SPACE){
-            System.out.println("Space pressed");
+            // System.out.println("Space pressed");
             graphPanel.toggleGraphMode();
+        }
+        if(!graphPanel.getIsDirected()){
+            edgeManager.createUndirectedEdges();
         }
     }
 

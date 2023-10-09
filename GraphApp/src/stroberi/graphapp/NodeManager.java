@@ -38,7 +38,7 @@ public class NodeManager {
 
         //resize the adjacency matrix
         graphPanel.getAdjacencyMatrix().resizeMatrix(graphPanel.getBiggestLabel()+1);
-        graphPanel.getAdjacencyMatrix().printMatrix();
+        // graphPanel.getAdjacencyMatrix().printMatrix();
         graphPanel.getAdjacencyMatrix().saveMatrixToFile();
     }
 
@@ -61,7 +61,7 @@ public class NodeManager {
 
         //resize the adjacency matrix
         graphPanel.getAdjacencyMatrix().resizeMatrix(graphPanel.getBiggestLabel()+1);
-        graphPanel.getAdjacencyMatrix().printMatrix();
+        // graphPanel.getAdjacencyMatrix().printMatrix();
         graphPanel.getAdjacencyMatrix().saveMatrixToFile();
     }
 
@@ -73,10 +73,10 @@ public class NodeManager {
         else {
             node.select();
             selectedNodes.add(node);
-            System.out.println("Selected nodes: ");
-            for(Node n : selectedNodes) {
+            // System.out.println("Selected nodes: ");
+            /*for(Node n : selectedNodes) {
                 System.out.println(n.getLabel());
-            }
+            }*/
         }
 
         //ensure that only two nodes are selected at a time

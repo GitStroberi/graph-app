@@ -63,7 +63,10 @@ public class GraphPanel extends JPanel{
             int arrowSize = 10; // Adjust the size as needed
             int arrowX = end.getX();
             int arrowY = end.getY();
-            drawArrow(g, start.getX(), start.getY(), arrowX, arrowY, arrowSize, 25);
+
+            if(isDirected){
+                drawArrow(g, start.getX(), start.getY(), arrowX, arrowY, arrowSize, 25);
+            }
         }
 
         // Draw the nodes
@@ -189,9 +192,10 @@ public class GraphPanel extends JPanel{
     }
     public void toggleGraphMode() {
         isDirected = !isDirected;
-        System.out.println("Graph mode: " + (isDirected ? "Directed is true" : "Directed is false"));
+        this.repaint();
+        // System.out.println("Graph mode: " + (isDirected ? "Directed is true" : "Directed is false"));
     }
-    public boolean isDirected() {
+    public boolean getIsDirected() {
         return isDirected;
     }
 }

@@ -22,7 +22,7 @@ public class AdjacencyMatrix {
         int currentSize = matrix.size();
         if (newSize < currentSize) {
             // Remove rows and columns to reduce the size
-            System.out.println("newSize: " + newSize + " currentSize: " + currentSize);
+            // System.out.println("newSize: " + newSize + " currentSize: " + currentSize);
             for (int i = currentSize - 1; i >= newSize; i--) {
                 matrix.remove(i);
                 for (List<Integer> row : matrix) {
@@ -31,7 +31,7 @@ public class AdjacencyMatrix {
             }
         } else if (newSize > currentSize) {
             // Add rows and columns to increase the size
-            System.out.println("newSize: " + newSize + " currentSize: " + currentSize);
+            // System.out.println("newSize: " + newSize + " currentSize: " + currentSize);
             for (int i = currentSize; i < newSize; i++) {
                 List<Integer> newRow = new ArrayList<>();
                 for (int j = 0; j < currentSize; j++) {
@@ -57,10 +57,10 @@ public class AdjacencyMatrix {
         //set both the start and end to 0 because the graph is undirected
         matrix.get(start).set(end, 0);
 
-        if (!graphPanel.isDirected()) {
+        if (!graphPanel.getIsDirected()) {
             matrix.get(end).set(start, 0);
         }
-        printMatrix();
+        //printMatrix();
         saveMatrixToFile();
     }
 
@@ -72,10 +72,10 @@ public class AdjacencyMatrix {
 
         //set both the start and end to 1 because the graph is undirected
         matrix.get(start).set(end, 1);
-        if (!graphPanel.isDirected()) {
+        if (!graphPanel.getIsDirected()) {
             matrix.get(end).set(start, 1);
         }
-        printMatrix();
+        //printMatrix();
         saveMatrixToFile();
     }
 

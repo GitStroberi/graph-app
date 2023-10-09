@@ -60,6 +60,10 @@ public class MouseListener extends MouseAdapter{
 
         // Get the node at the clicked position
         selectedNode = nodeManager.getNodeAt(x, y);
+        /*
+        if(selectedNode != null)
+            System.out.println("Selected node: " + selectedNode.getLabel());
+        */
 
         if (SwingUtilities.isRightMouseButton(e) && selectedNode != null) {
             //calculate the offset of the mouse click from the node's position
@@ -76,6 +80,7 @@ public class MouseListener extends MouseAdapter{
 
             //System.out.println("Dragging node " + selectedNode.getLabel());
             //update the node's position
+
             selectedNode.updatePosition(x, y);
 
             //repaint the panel
