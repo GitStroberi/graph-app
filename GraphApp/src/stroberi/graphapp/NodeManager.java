@@ -73,6 +73,10 @@ public class NodeManager {
         else {
             node.select();
             selectedNodes.add(node);
+            System.out.println("Selected nodes: ");
+            for(Node n : selectedNodes) {
+                System.out.println(n.getLabel());
+            }
         }
 
         //ensure that only two nodes are selected at a time

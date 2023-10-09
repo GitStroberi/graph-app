@@ -8,9 +8,12 @@ import java.util.List;
 
 public class AdjacencyMatrix {
     private List<List<Integer>> matrix = new ArrayList<>();
+
+    private GraphPanel graphPanel;
     private String filePath;
 
-    public AdjacencyMatrix(String filePath) {
+    public AdjacencyMatrix(GraphPanel graphPanel, String filePath) {
+        this.graphPanel = graphPanel;
         this.filePath = filePath;
     }
 
@@ -53,7 +56,10 @@ public class AdjacencyMatrix {
 
         //set both the start and end to 0 because the graph is undirected
         matrix.get(start).set(end, 0);
-        matrix.get(end).set(start, 0);
+
+        if (!graphPanel.isDirected()) {
+            matrix.get(end).set(start, 0);
+        }
         printMatrix();
         saveMatrixToFile();
     }
@@ -61,13 +67,14 @@ public class AdjacencyMatrix {
     public void addEdgeToMatrix(Edge edge) {
         //int biggestLabel = graphPanel.getBiggestLabel();
         //resizeMatrix(biggestLabel + 1);
-
         int start = Integer.parseInt(edge.getStart().getLabel());
         int end = Integer.parseInt(edge.getEnd().getLabel());
 
         //set both the start and end to 1 because the graph is undirected
         matrix.get(start).set(end, 1);
-        matrix.get(end).set(start, 1);
+        if (!graphPanel.isDirected()) {
+            matrix.get(end).set(start, 1);
+        }
         printMatrix();
         saveMatrixToFile();
     }

@@ -15,6 +15,7 @@ public class GraphPanel extends JPanel{
     private final ArrayList<Integer> availableLabels;
     private final ArrayList<Node> selectedNodes;
     private int biggestLabel;
+    private boolean isDirected = false;
 
     public GraphPanel() throws IOException {
 
@@ -29,12 +30,19 @@ public class GraphPanel extends JPanel{
         edges = new ArrayList<>();
         availableLabels = new ArrayList<>();
         selectedNodes = new ArrayList<>();
-        adjacencyMatrix = new AdjacencyMatrix(prop.getProperty("matrixFilePath"));
+        adjacencyMatrix = new AdjacencyMatrix(this, prop.getProperty("matrixFilePath"));
         biggestLabel = -1;
 
         MouseListener mouseListener = new MouseListener(this);
         addMouseListener(mouseListener);
         addMouseMotionListener(mouseListener);
+
+        KeyboardListener keyboardListener = new KeyboardListener(this);
+        addKeyListener(keyboardListener);
+        setFocusable(true);
+        setFocusTraversalKeysEnabled(false);
+        requestFocusInWindow();
+
     }
 
     @Override
@@ -130,21 +138,27 @@ public class GraphPanel extends JPanel{
     }
 
     public void addEdge(Edge edge) {
+        //if edge already exists, don't add it
+        for (Edge e : edges) {
+            if(e.getStart() == edge.getStart() && e.getEnd() == edge.getEnd()) {
+                return;
+            }
+        }
         edges.add(edge);
         adjacencyMatrix.addEdgeToMatrix(edge);
     }
 
     public Edge getEdge(Node start, Node end) {
         for (Edge edge : edges) {
-            ///if(edge.getStart() == start && edge.getEnd() == end) {
-            if(edge.getStart() == start && edge.getEnd() == end || edge.getStart() == end && edge.getEnd() == start) {
+            if(edge.getStart() == start && edge.getEnd() == end) {
+            ///if(edge.getStart() == start && edge.getEnd() == end || edge.getStart() == end && edge.getEnd() == start) {
                     return edge;
             }
         }
         return null;
     }
 
-    public void removeEdge(Edge edge) {
+    public void  removeEdge(Edge edge) {
         edges.remove(edge);
         adjacencyMatrix.removeEdgeFromMatrix(edge);
     }
@@ -172,5 +186,12 @@ public class GraphPanel extends JPanel{
     }
     public int getBiggestLabel() {
         return biggestLabel;
+    }
+    public void toggleGraphMode() {
+        isDirected = !isDirected;
+        System.out.println("Graph mode: " + (isDirected ? "Directed is true" : "Directed is false"));
+    }
+    public boolean isDirected() {
+        return isDirected;
     }
 }

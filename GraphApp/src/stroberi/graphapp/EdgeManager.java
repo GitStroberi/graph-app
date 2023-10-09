@@ -16,8 +16,12 @@ public class EdgeManager {
         //for now, we will assume that the edge is undirected so we will create two edges
         Edge edge = new Edge(selectedNodes.get(0), selectedNodes.get(1));
         graphPanel.addEdge(edge);
-        Edge edge2 = new Edge(selectedNodes.get(1), selectedNodes.get(0));
-        graphPanel.addEdge(edge2);
+
+        if(!graphPanel.isDirected()){
+            System.out.println("Entered if because graph is undirected (createEdge)");
+            Edge edge2 = new Edge(selectedNodes.get(1), selectedNodes.get(0));
+            graphPanel.addEdge(edge2);
+        }
 
         //unselect the nodes
         selectedNodes.get(0).unselect();
@@ -29,8 +33,20 @@ public class EdgeManager {
         graphPanel.removeEdge(edge);
 
         //remove the other edge for now, we will assume that the edge is undirected
-        Edge edge2 = graphPanel.getEdge(edge.getEnd(), edge.getStart());
-        graphPanel.removeEdge(edge2);
+        //Edge edge2 = graphPanel.getEdge(edge.getEnd(), edge.getStart());
+        //graphPanel.removeEdge(edge2);
+
+        if(!graphPanel.isDirected()){
+            System.out.println("Entered if because graph is undirected (removeEdge)");
+            Edge edge2 = graphPanel.getEdge(edge.getEnd(), edge.getStart());
+            if (edge2 != null){
+                System.out.println("Also removing edge " + edge2.getStart().getLabel() + " " + edge2.getEnd().getLabel());
+                graphPanel.removeEdge(edge2);
+            }
+            else{
+                System.out.println("Edge2 is null");
+            }
+        }
 
         //System.out.println("Edge removed");
         //unselect the nodes
@@ -57,6 +73,7 @@ public class EdgeManager {
             //if there is already an edge between the two nodes, remove it
             Edge edge = graphPanel.getEdge(selectedNodes.get(0), selectedNodes.get(1));
             if(edge != null) {
+                System.out.println("Called removeEdge for " + edge.getStart().getLabel() + " " + edge.getEnd().getLabel());
                 removeEdge(edge);
             }
             else {
