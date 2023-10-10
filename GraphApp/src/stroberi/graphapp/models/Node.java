@@ -1,4 +1,4 @@
-package stroberi.graphapp;
+package stroberi.graphapp.models;
 
 public class Node {
     private int x;

@@ -1,4 +1,9 @@
-package stroberi.graphapp;
+package stroberi.graphapp.listeners;
+
+import stroberi.graphapp.managers.EdgeManager;
+import stroberi.graphapp.GraphPanel;
+import stroberi.graphapp.models.Node;
+import stroberi.graphapp.managers.NodeManager;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;

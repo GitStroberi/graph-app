@@ -1,5 +1,13 @@
 package stroberi.graphapp;
 
+import stroberi.graphapp.listeners.KeyboardListener;
+import stroberi.graphapp.listeners.MouseListener;
+import stroberi.graphapp.managers.EdgeManager;
+import stroberi.graphapp.managers.NodeManager;
+import stroberi.graphapp.models.AdjacencyMatrix;
+import stroberi.graphapp.models.Edge;
+import stroberi.graphapp.models.Node;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -23,7 +31,7 @@ public class GraphPanel extends JPanel{
 
         String projectPath = System.getProperty("user.dir");
         try {
-            prop.loadFromXML(new FileInputStream(projectPath + "/src/stroberi/graphapp/config.xml"));
+            prop.loadFromXML(new FileInputStream(projectPath + "/src/resources/config.xml"));
         } catch (IOException e) {
             e.printStackTrace();
         }

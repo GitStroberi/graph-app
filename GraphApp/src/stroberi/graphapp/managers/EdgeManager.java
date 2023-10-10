@@ -1,4 +1,8 @@
-package stroberi.graphapp;
+package stroberi.graphapp.managers;
+
+import stroberi.graphapp.models.Edge;
+import stroberi.graphapp.GraphPanel;
+import stroberi.graphapp.models.Node;
 
 import java.util.ArrayList;
 

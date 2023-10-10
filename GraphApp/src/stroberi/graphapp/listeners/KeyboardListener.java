@@ -1,6 +1,8 @@
-package stroberi.graphapp;
+package stroberi.graphapp.listeners;
 
-import java.awt.*;
+import stroberi.graphapp.managers.EdgeManager;
+import stroberi.graphapp.GraphPanel;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 

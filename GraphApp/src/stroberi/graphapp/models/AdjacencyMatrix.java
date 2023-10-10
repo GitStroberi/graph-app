@@ -1,4 +1,6 @@
-package stroberi.graphapp;
+package stroberi.graphapp.models;
+
+import stroberi.graphapp.GraphPanel;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
