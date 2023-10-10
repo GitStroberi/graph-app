@@ -113,5 +113,7 @@ public class EdgeManager {
         for (Edge edge : newEdges) {
             graphPanel.addEdge(edge);
         }
+        graphPanel.getAdjacencyMatrix().saveMatrixToFile();
+        graphPanel.repaint();
     }
 }
