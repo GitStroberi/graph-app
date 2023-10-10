@@ -16,10 +16,8 @@ public class GraphPanel extends JPanel{
     private final ArrayList<Node> selectedNodes;
     private int biggestLabel;
     private boolean isDirected = false;
-
-    private NodeManager nodeManager;
-
-    private EdgeManager edgeManager;
+    private final NodeManager nodeManager;
+    private final EdgeManager edgeManager;
 
     public GraphPanel() throws IOException {
 
@@ -49,7 +47,6 @@ public class GraphPanel extends JPanel{
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
         requestFocusInWindow();
-
     }
 
     @Override

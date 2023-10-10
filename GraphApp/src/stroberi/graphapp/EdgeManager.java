@@ -97,4 +97,21 @@ public class EdgeManager {
         }
         graphPanel.getAdjacencyMatrix().saveMatrixToFile();
     }
+
+    public void createCompleteGraph(){
+        ArrayList<Edge> newEdges = new ArrayList<>();
+        for(Node node1 : graphPanel.getNodes()){
+            for(Node node2 : graphPanel.getNodes()){
+                if(node1 != node2){
+                    Edge edge = new Edge(node1, node2);
+                    if(!newEdges.contains(edge)){
+                        newEdges.add(edge);
+                    }
+                }
+            }
+        }
+        for (Edge edge : newEdges) {
+            graphPanel.addEdge(edge);
+        }
+    }
 }

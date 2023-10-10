@@ -27,6 +27,9 @@ public class KeyboardListener implements KeyListener {
         if(!graphPanel.getIsDirected()){
             edgeManager.createUndirectedEdges();
         }
+        if (key == KeyEvent.VK_C){
+            graphPanel.getEdgeManager().createCompleteGraph();
+        }
     }
 
     @Override

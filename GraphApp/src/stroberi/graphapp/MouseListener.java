@@ -81,6 +81,19 @@ public class MouseListener extends MouseAdapter{
             //System.out.println("Dragging node " + selectedNode.getLabel());
             //update the node's position
 
+            //check if the node is dragged outside the panel
+            if(x < 0) {
+                x = 0;
+            }
+            else if(x > graphPanel.getWidth()) {
+                x = graphPanel.getWidth();
+            }
+            if(y < 0) {
+                y = 0;
+            }
+            else if(y > graphPanel.getHeight()) {
+                y = graphPanel.getHeight();
+            }
             selectedNode.updatePosition(x, y);
 
             //repaint the panel
@@ -90,9 +103,8 @@ public class MouseListener extends MouseAdapter{
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if(isRightMouseDragging) {
+        if (isRightMouseDragging) {
             isRightMouseDragging = false;
         }
     }
-
 }
