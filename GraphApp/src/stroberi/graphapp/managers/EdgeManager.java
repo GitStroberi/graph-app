@@ -120,4 +120,16 @@ public class EdgeManager {
         graphPanel.getAdjacencyMatrix().saveMatrixToFile();
         graphPanel.repaint();
     }
+
+    public void removeAllEdges() {
+        ArrayList<Edge> edgesToRemove = new ArrayList<>();
+        for(Edge edge : graphPanel.getEdges()) {
+            edgesToRemove.add(edge);
+        }
+        for(Edge edge : edgesToRemove) {
+            graphPanel.removeEdge(edge);
+        }
+        graphPanel.getAdjacencyMatrix().saveMatrixToFile();
+        graphPanel.repaint();
+    }
 }

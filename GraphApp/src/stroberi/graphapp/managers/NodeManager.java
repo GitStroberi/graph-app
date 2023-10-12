@@ -92,4 +92,16 @@ public class NodeManager {
     private boolean isClickOnNode(int x, int y, Node node) {
         return x >= node.getX()-25 && x <= node.getX()+25 && y >= node.getY()-25 && y <= node.getY()+25;
     }
+
+    public boolean isOverlapping(int x, int y, Node node2) {
+        //go through all the nodes and check if the position (x,y) is inside any of them
+        for(Node node1 : graphPanel.getNodes()) {
+            if(node1 != node2) {
+                if(isClickOnNode(x, y, node1)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

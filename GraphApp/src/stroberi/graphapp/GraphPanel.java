@@ -27,6 +27,8 @@ public class GraphPanel extends JPanel{
     private final NodeManager nodeManager;
     private final EdgeManager edgeManager;
 
+    private final int nodeSize;
+
     public GraphPanel() throws IOException {
 
         String projectPath = System.getProperty("user.dir");
@@ -42,6 +44,7 @@ public class GraphPanel extends JPanel{
         selectedNodes = new ArrayList<>();
         adjacencyMatrix = new AdjacencyMatrix(this, prop.getProperty("matrixFilePath"));
         biggestLabel = -1;
+        nodeSize = Integer.parseInt(prop.getProperty("nodeSize"));
 
         this.nodeManager = new NodeManager(this);
         this.edgeManager = new EdgeManager(this);
@@ -77,14 +80,14 @@ public class GraphPanel extends JPanel{
             int arrowY = end.getY();
 
             if(isDirected){
-                drawArrow(g, start.getX(), start.getY(), arrowX, arrowY, arrowSize, 25);
+                drawArrow(g, start.getX(), start.getY(), arrowX, arrowY, arrowSize, nodeSize);
             }
         }
 
         // Draw the nodes
         for (Node node : nodes) {
             g.setColor(Color.WHITE);
-            g.fillOval(node.getX()-25, node.getY()-25, node.getRadius(), node.getRadius());
+            g.fillOval(node.getX()-nodeSize/2, node.getY()-nodeSize/2, node.getRadius(), node.getRadius());
             g.setColor(Color.BLACK);
 
             if(node.isSelected()) {
@@ -93,7 +96,7 @@ public class GraphPanel extends JPanel{
             else {
                 g.setColor(Color.BLACK);
             }
-            g.drawOval(node.getX()-25, node.getY()-25, node.getRadius(), node.getRadius());
+            g.drawOval(node.getX()-nodeSize/2, node.getY()-nodeSize/2, node.getRadius(), node.getRadius());
 
             String label = node.getLabel();
             if(Integer.parseInt(label) < 10) {

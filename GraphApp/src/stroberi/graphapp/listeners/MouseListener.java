@@ -99,7 +99,11 @@ public class MouseListener extends MouseAdapter{
             else if(y > graphPanel.getHeight()) {
                 y = graphPanel.getHeight();
             }
-            selectedNode.updatePosition(x, y);
+
+            //check if the node is overlapping with another node
+            if(!nodeManager.isOverlapping(x, y, selectedNode)) {
+                selectedNode.updatePosition(x, y);
+            }
 
             //repaint the panel
             graphPanel.repaint();

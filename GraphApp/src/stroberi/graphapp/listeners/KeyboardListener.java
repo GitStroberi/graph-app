@@ -32,6 +32,9 @@ public class KeyboardListener implements KeyListener {
         if (key == KeyEvent.VK_C){
             graphPanel.getEdgeManager().createCompleteGraph();
         }
+        if(key == KeyEvent.VK_R){
+            graphPanel.getEdgeManager().removeAllEdges();
+        }
     }
 
     @Override
