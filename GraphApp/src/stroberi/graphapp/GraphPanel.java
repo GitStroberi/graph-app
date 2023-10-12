@@ -80,7 +80,7 @@ public class GraphPanel extends JPanel{
             int arrowY = end.getY();
 
             if(isDirected){
-                drawArrow(g, start.getX(), start.getY(), arrowX, arrowY, arrowSize, nodeSize);
+                drawArrow(g, start.getX(), start.getY(), arrowX, arrowY, arrowSize, nodeSize/2);
             }
         }
 

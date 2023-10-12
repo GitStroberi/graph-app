@@ -13,7 +13,7 @@ public class Main {
             frame.setResizable(false);
             frame.setVisible(true);
 
-            GraphPanel graphPanel = null;
+            GraphPanel graphPanel;
             try {
                 graphPanel = new GraphPanel();
             } catch (IOException e) {

@@ -6,8 +6,8 @@ import stroberi.graphapp.models.Node;
 import java.util.ArrayList;
 
 public class NodeManager {
-    private GraphPanel graphPanel;
-    private ArrayList<Node> selectedNodes;
+    final private GraphPanel graphPanel;
+    final private ArrayList<Node> selectedNodes;
     public NodeManager(GraphPanel graphPanel) {
         this.graphPanel = graphPanel;
         this.selectedNodes = graphPanel.getSelectedNodes();

@@ -10,9 +10,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class MouseListener extends MouseAdapter{
-    private GraphPanel graphPanel;
-    private NodeManager nodeManager;
-    private EdgeManager edgeManager;
+    final private GraphPanel graphPanel;
+    private final NodeManager nodeManager;
+    private final EdgeManager edgeManager;
     private Node selectedNode;
 
     private boolean isRightMouseDragging = false;

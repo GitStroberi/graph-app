@@ -7,8 +7,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class KeyboardListener implements KeyListener {
-    private GraphPanel graphPanel;
-    private EdgeManager edgeManager;
+    final private GraphPanel graphPanel;
+    final private EdgeManager edgeManager;
     public KeyboardListener(GraphPanel graphPanel) {
         this.graphPanel = graphPanel;
         this.edgeManager = graphPanel.getEdgeManager();

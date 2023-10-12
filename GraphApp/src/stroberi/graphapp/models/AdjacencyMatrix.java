@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdjacencyMatrix {
-    private List<List<Integer>> matrix = new ArrayList<>();
+    private final List<List<Integer>> matrix = new ArrayList<>();
 
-    private GraphPanel graphPanel;
-    private String filePath;
+    private final GraphPanel graphPanel;
+    private final String filePath;
 
     public AdjacencyMatrix(GraphPanel graphPanel, String filePath) {
         this.graphPanel = graphPanel;
@@ -88,7 +88,6 @@ public class AdjacencyMatrix {
             }
             System.out.println();
         }
-        System.out.printf("\n");
     }
 
     public void saveMatrixToFile() {

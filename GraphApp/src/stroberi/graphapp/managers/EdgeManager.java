@@ -7,8 +7,8 @@ import stroberi.graphapp.models.Node;
 import java.util.ArrayList;
 
 public class EdgeManager {
-    private GraphPanel graphPanel;
-    private ArrayList<Node> selectedNodes;
+    final private GraphPanel graphPanel;
+    final private ArrayList<Node> selectedNodes;
 
     public EdgeManager(GraphPanel graphPanel) {
         this.graphPanel = graphPanel;
@@ -17,7 +17,7 @@ public class EdgeManager {
 
     public void createEdge(){
         //if there is no edge between the two nodes, create it
-        //for now, we will assume that the edge is undirected so we will create two edges
+        //for now, we will assume that the edge is undirected, so we will create two edges
         Edge edge = new Edge(selectedNodes.get(0), selectedNodes.get(1));
         graphPanel.addEdge(edge);
 
@@ -47,9 +47,9 @@ public class EdgeManager {
                 // System.out.println("Also removing edge " + edge2.getStart().getLabel() + " " + edge2.getEnd().getLabel());
                 graphPanel.removeEdge(edge2);
             }
-            else{
+            /*else{
                 // System.out.println("Edge2 is null");
-            }
+            }*/
         }
 
         //System.out.println("Edge removed");
@@ -122,10 +122,7 @@ public class EdgeManager {
     }
 
     public void removeAllEdges() {
-        ArrayList<Edge> edgesToRemove = new ArrayList<>();
-        for(Edge edge : graphPanel.getEdges()) {
-            edgesToRemove.add(edge);
-        }
+        ArrayList<Edge> edgesToRemove = new ArrayList<>(graphPanel.getEdges());
         for(Edge edge : edgesToRemove) {
             graphPanel.removeEdge(edge);
         }

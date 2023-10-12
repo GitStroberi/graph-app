@@ -5,8 +5,8 @@ public class Node {
     private int y;
     private int xOffset; // offset from mouse click to node center
     private int yOffset; // offset from mouse click to node center
-    private int radius;
-    private String label;
+    private final int radius;
+    private final String label;
     private boolean selected = false;
 
     public Node(int x, int y, int radius, String label) {
