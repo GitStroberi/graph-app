@@ -48,6 +48,14 @@ public class Node {
         this.y = y - yOffset;
     }
 
+    public int getxOffset() {
+        return xOffset;
+    }
+
+    public int getyOffset() {
+        return yOffset;
+    }
+
     public int getRadius() {
         return radius;
     }

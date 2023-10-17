@@ -35,6 +35,11 @@ public class MouseListener extends MouseAdapter{
         if (SwingUtilities.isLeftMouseButton(e)) {
             // If there is no node at the clicked position, create a new node
             if(selectedNode == null) {
+                //check if the click would create a node overlapping another node
+                if(nodeManager.isNodeNearby(x, y)) {
+                    // System.out.println("Node would overlap another node");
+                    return;
+                }
                 nodeManager.createNode(x, y);
             }
             else {
@@ -100,14 +105,32 @@ public class MouseListener extends MouseAdapter{
                 y = graphPanel.getHeight();
             }
 
-            //check if the node is overlapping with another node
-            if(!nodeManager.isOverlapping(x, y, selectedNode)) {
+            //check if the mouse position (with the offsets of the selected node) is inside another node
+            double minDistance = getMinDistance(x, y);
+
+            if(minDistance > selectedNode.getRadius()) {
                 selectedNode.updatePosition(x, y);
+            }
+            else {
+                // System.out.println("Node " + selectedNode.getLabel() + " is overlapping");
             }
 
             //repaint the panel
             graphPanel.repaint();
         }
+    }
+
+    public int getMinDistance (int x, int y) {
+        int minDistance = Integer.MAX_VALUE;
+        for(Node node : graphPanel.getNodes()) {
+            if(node != selectedNode) {
+                double distance = Math.sqrt(Math.pow(node.getX() - (x - selectedNode.getxOffset()), 2) + Math.pow(node.getY() - (y - selectedNode.getyOffset()), 2));
+                if(distance < minDistance) {
+                    minDistance = (int)distance;
+                }
+            }
+        }
+        return minDistance;
     }
 
     @Override

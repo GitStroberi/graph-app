@@ -90,16 +90,28 @@ public class NodeManager {
     }
 
     private boolean isClickOnNode(int x, int y, Node node) {
-        return x >= node.getX()-25 && x <= node.getX()+25 && y >= node.getY()-25 && y <= node.getY()+25;
+        //check if the click is within the bounds of the node, using the radius
+        int radius = node.getRadius();
+        int centerX = node.getX();
+        int centerY = node.getY();
+
+        //check if the click is within the bounds of the node, using the distance formula
+        double distance = Math.sqrt(Math.pow(centerX - x, 2) + Math.pow(centerY - y, 2));
+        return distance <= radius/2;
     }
 
-    public boolean isOverlapping(int x, int y, Node node2) {
-        //go through all the nodes and check if the position (x,y) is inside any of them
-        for(Node node1 : graphPanel.getNodes()) {
-            if(node1 != node2) {
-                if(isClickOnNode(x, y, node1)) {
-                    return true;
-                }
+    public boolean isNodeNearby(int x, int y) {
+        int radius;
+        int centerX;
+        int centerY;
+        for(Node node : graphPanel.getNodes()) {
+            radius = node.getRadius();
+            centerX = node.getX();
+            centerY = node.getY();
+
+            double distance = Math.sqrt(Math.pow(centerX - x, 2) + Math.pow(centerY - y, 2));
+            if(distance <= radius) {
+                return true;
             }
         }
         return false;
