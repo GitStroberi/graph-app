@@ -8,11 +8,10 @@ public class Edge {
         this.start = start;
         this.end = end;
     }
-
+    
     public Node getStart() {
         return start;
     }
-
     public Node getEnd() {
         return end;
     }

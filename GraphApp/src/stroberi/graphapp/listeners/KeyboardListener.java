@@ -36,8 +36,14 @@ public class KeyboardListener implements KeyListener {
             graphPanel.getEdgeManager().removeAllEdges();
         }
         if(key == KeyEvent.VK_G){
-            graphPanel.getNodeManager().generateRandomNodes(15);
-            graphPanel.getEdgeManager().createPartialGraph(50);
+            System.out.println("Generating random graph");
+            System.out.println("Give the number of nodes: ");
+            int numberOfNodes = Integer.parseInt(graphPanel.getScanner().nextLine());
+            System.out.println("Give the chance of edges appearing between nodes: ");
+            int chanceOfEdges = Integer.parseInt(graphPanel.getScanner().nextLine());
+
+            graphPanel.getNodeManager().generateRandomNodes(numberOfNodes);
+            graphPanel.getEdgeManager().createPartialGraph(chanceOfEdges);
         }
     }
 

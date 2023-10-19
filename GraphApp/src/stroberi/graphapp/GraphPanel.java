@@ -15,6 +15,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import java.util.Scanner;
+
 public class GraphPanel extends JPanel{
     Properties prop = new Properties();
     private final ArrayList<Node> nodes;
@@ -26,9 +28,8 @@ public class GraphPanel extends JPanel{
     private boolean isDirected = false;
     private final NodeManager nodeManager;
     private final EdgeManager edgeManager;
-
     private final int nodeSize;
-
+    private final Scanner scanner;
     public GraphPanel() throws IOException {
 
         String projectPath = System.getProperty("user.dir");
@@ -38,6 +39,7 @@ public class GraphPanel extends JPanel{
             e.printStackTrace();
         }
 
+        scanner = new Scanner(System.in);
         nodes = new ArrayList<>();
         edges = new ArrayList<>();
         availableLabels = new ArrayList<>();
@@ -219,5 +221,9 @@ public class GraphPanel extends JPanel{
 
     public EdgeManager getEdgeManager() {
         return edgeManager;
+    }
+
+    public Scanner getScanner() {
+        return scanner;
     }
 }

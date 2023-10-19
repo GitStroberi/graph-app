@@ -123,11 +123,15 @@ public class EdgeManager {
 
     public void createPartialGraph(int chanceOfEdge){
         ArrayList<Edge> newEdges = new ArrayList<>();
-        for(Node node1 : graphPanel.getNodes()){
-            for(Node node2 : graphPanel.getNodes()){
-                if(node1 != node2){
-                    int random = (int)(Math.random() * 100);
-                    if(graphPanel.getIsDirected()){
+
+        //in case the graph is undirected, to avoid giving the same edge two chances,
+        //after we are finished with a node, we remove it from the list so that it won't be checked again
+        ArrayList<Node> tempNodes = new ArrayList<>(graphPanel.getNodes());
+        if(!graphPanel.getIsDirected()){
+            for(Node node1 : graphPanel.getNodes()){
+                for(Node node2 : tempNodes){
+                    if(node1 != node2){
+                        int random = (int)(Math.random() * 100);
                         if(random < chanceOfEdge){
                             Edge edge = new Edge(node1, node2);
                             if(!newEdges.contains(edge)){
@@ -135,8 +139,16 @@ public class EdgeManager {
                             }
                         }
                     }
-                    else{
-                        if(random < chanceOfEdge/2){
+                }
+                tempNodes.remove(node1);
+            }
+        }
+        else{
+            for(Node node1 : graphPanel.getNodes()){
+                for(Node node2 : graphPanel.getNodes()){
+                    if(node1 != node2){
+                        int random = (int)(Math.random() * 100);
+                        if(random < chanceOfEdge){
                             Edge edge = new Edge(node1, node2);
                             if(!newEdges.contains(edge)){
                                 newEdges.add(edge);
@@ -150,8 +162,11 @@ public class EdgeManager {
         for (Edge edge : newEdges) {
             graphPanel.addEdge(edge);
         }
+
         graphPanel.getAdjacencyMatrix().saveMatrixToFile();
         graphPanel.repaint();
+
+        System.out.println("Edge count: " + graphPanel.getEdges().size());
     }
 
     public void removeAllEdges() {
