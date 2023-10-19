@@ -121,6 +121,39 @@ public class EdgeManager {
         graphPanel.repaint();
     }
 
+    public void createPartialGraph(int chanceOfEdge){
+        ArrayList<Edge> newEdges = new ArrayList<>();
+        for(Node node1 : graphPanel.getNodes()){
+            for(Node node2 : graphPanel.getNodes()){
+                if(node1 != node2){
+                    int random = (int)(Math.random() * 100);
+                    if(graphPanel.getIsDirected()){
+                        if(random < chanceOfEdge){
+                            Edge edge = new Edge(node1, node2);
+                            if(!newEdges.contains(edge)){
+                                newEdges.add(edge);
+                            }
+                        }
+                    }
+                    else{
+                        if(random < chanceOfEdge/2){
+                            Edge edge = new Edge(node1, node2);
+                            if(!newEdges.contains(edge)){
+                                newEdges.add(edge);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        for (Edge edge : newEdges) {
+            graphPanel.addEdge(edge);
+        }
+        graphPanel.getAdjacencyMatrix().saveMatrixToFile();
+        graphPanel.repaint();
+    }
+
     public void removeAllEdges() {
         ArrayList<Edge> edgesToRemove = new ArrayList<>(graphPanel.getEdges());
         for(Edge edge : edgesToRemove) {

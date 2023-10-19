@@ -3,6 +3,7 @@ package stroberi.graphapp.managers;
 import stroberi.graphapp.GraphPanel;
 import stroberi.graphapp.models.Node;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class NodeManager {
@@ -115,5 +116,28 @@ public class NodeManager {
             }
         }
         return false;
+    }
+
+    public void generateRandomNodes(int count){
+        //clear the current nodes
+        ArrayList<Node> nodesToRemove = new ArrayList<>();
+        for(Node node : graphPanel.getNodes()){
+            nodesToRemove.add(node);
+        }
+        for(Node node : nodesToRemove){
+            graphPanel.getEdgeManager().removeEdges(node);
+            removeNode(node);
+        }
+
+        //generate new nodes at random positions. if the node is overlapping, generate a new position
+        for(int i = 0; i < count; i++){
+            int x = (int)(Math.random() * (graphPanel.getWidth() - graphPanel.nodeSize())) + graphPanel.nodeSize()/2;
+            int y = (int)(Math.random() * (graphPanel.getHeight() - graphPanel.nodeSize())) + graphPanel.nodeSize()/2;
+            while(isNodeNearby(x, y)){
+                x = (int)(Math.random() * (graphPanel.getWidth() - graphPanel.nodeSize())) + graphPanel.nodeSize()/2;
+                y = (int)(Math.random() * (graphPanel.getHeight() - graphPanel.nodeSize())) + graphPanel.nodeSize()/2;
+            }
+            createNode(x, y);
+        }
     }
 }

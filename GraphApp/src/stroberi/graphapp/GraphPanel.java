@@ -134,7 +134,6 @@ public class GraphPanel extends JPanel{
         g2.setTransform(savedTransform);
     }
 
-
     public AdjacencyMatrix getAdjacencyMatrix() {
         return adjacencyMatrix;
     }
