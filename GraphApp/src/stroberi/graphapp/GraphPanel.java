@@ -12,6 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class GraphPanel extends JPanel{
@@ -194,6 +195,10 @@ public class GraphPanel extends JPanel{
         return availableLabels;
     }
     public void addAvailableLabel(int label) {
+        //check if the label is already in the available labels
+        if(availableLabels.contains(label)){
+            return;
+        }
         availableLabels.add(label);
     }
     public void removeAvailableLabel(int label) {
@@ -266,7 +271,7 @@ public class GraphPanel extends JPanel{
         //repaint the graph
         this.repaint();
     }
-    public void dfsUndirected(Node n, ArrayList<Node> connectedComponent){
+    private void dfsUndirected(Node n, ArrayList<Node> connectedComponent){
         Stack<Node> stack = new Stack<>();
         stack.push(n);
         while(!stack.isEmpty()){
@@ -279,5 +284,152 @@ public class GraphPanel extends JPanel{
                 }
             }
         }
+    }
+
+    private void fillOrder(AdjacencyMatrix matrix, Node node, boolean[] visited, Stack<Node> stack) {
+        visited[Integer.parseInt(node.getLabel())] = true;
+        for (Node neighbor : matrix.getNeighborsDirected(node)) {
+            if (!visited[Integer.parseInt(neighbor.getLabel())]) {
+                fillOrder(matrix, neighbor, visited, stack);
+            }
+        }
+        stack.push(node);
+    }
+
+    private void dfs(AdjacencyMatrix matrix, Node node, boolean[] visited, ArrayList<Node> connectedComponent) {
+        visited[Integer.parseInt(node.getLabel())] = true;
+        connectedComponent.add(node);
+        for (Node neighbor : matrix.getNeighborsDirected(node)) {
+            if (!visited[Integer.parseInt(neighbor.getLabel())]) {
+                dfs(matrix, neighbor, visited, connectedComponent);
+            }
+        }
+    }
+
+    private ArrayList<ArrayList<Node>> kosaraju(AdjacencyMatrix matrix){
+        Stack<Node> stack = new Stack<>();
+        boolean[] visited = new boolean[matrix.getSize()];
+
+        for (Node node : nodes) {
+            if (!visited[Integer.parseInt(node.getLabel())]) {
+                fillOrder(matrix, node, visited, stack);
+            }
+        }
+
+        AdjacencyMatrix transposedMatrix = matrix.transpose();
+        ArrayList<ArrayList<Node>> connectedComponents = new ArrayList<>();
+        visited = new boolean[matrix.getSize()];
+
+        while (!stack.isEmpty()) {
+            Node node = stack.pop();
+            if (!visited[Integer.parseInt(node.getLabel())]) {
+                ArrayList<Node> connectedComponent = new ArrayList<>();
+                dfs(transposedMatrix, node, visited, connectedComponent);
+                connectedComponents.add(connectedComponent);
+            }
+        }
+
+        return connectedComponents;
+    }
+
+    public void displaySCCs(){
+        ArrayList<ArrayList<Node>> connectedComponents = kosaraju(adjacencyMatrix);
+        System.out.println("The strongly connected components are: ");
+        for(ArrayList<Node> connectedComponent : connectedComponents){
+            System.out.print("[");
+            for(Node n : connectedComponent){
+                System.out.print(n.getLabel() + " ");
+            }
+            System.out.println("]");
+        }
+    }
+
+    public void redrawAsSCCs(){
+        ArrayList<ArrayList<Node>> connectedComponents = kosaraju(adjacencyMatrix);
+
+        ArrayList<Node> newNodes = new ArrayList<>();
+
+        int newLabel = 0;
+
+        //create the new nodes by finding the center of each connected component
+        for(ArrayList<Node> connectedComponent : connectedComponents){
+            int x = 0;
+            int y = 0;
+            for(Node n : connectedComponent){
+                x += n.getX();
+                y += n.getY();
+            }
+            x /= connectedComponent.size();
+            y /= connectedComponent.size();
+            Node newNode = new Node(x, y, nodeSize, Integer.toString(newLabel++));
+            newNodes.add(newNode);
+        }
+        newLabel = 0;
+
+        //adjacency list for the SCCs to remember which SCCs are connected
+        ArrayList<ArrayList<Integer>> adjacencyListSCC = new ArrayList<>();
+
+        //if an edge exists between SCC A and SCC B, mark in the adjacency list that A is adjacent to B
+        for(ArrayList<Node> CC : connectedComponents){
+            ArrayList<Integer> adjacentSCCs = new ArrayList<>();
+            for(Node n : CC){
+                for(Node neighbor : adjacencyMatrix.getNeighborsDirected(n)){
+                    if(!CC.contains(neighbor)){
+                        int SCCNode = Integer.parseInt(neighbor.getLabel());
+                        int SCC = -1;
+                        //see in which SCC the node
+                        for(int i = 0; i < connectedComponents.size(); i++){
+                            if(connectedComponents.get(i).contains(neighbor)){
+                                SCC = i;
+                                break;
+                            }
+                        }
+                        if(!adjacentSCCs.contains(SCC)){
+                            adjacentSCCs.add(SCC);
+                        }
+                    }
+                }
+            }
+            adjacencyListSCC.add(adjacentSCCs);
+        }
+
+        nodeManager.removeAllNodes();
+
+        //add the new nodes to the graph
+        for(Node n : newNodes){
+            nodeManager.createNode(n.getX(), n.getY());
+        }
+
+        System.out.println("Created the new nodes:");
+        for(Node n : newNodes){
+            System.out.println(n.getLabel());
+        }
+
+        //add the edges between the new nodes, based on the adjacency list (now each node label is the index in the adjacency list)
+        for(int i = 0; i < adjacencyListSCC.size(); i++){
+            for(int j = 0; j < adjacencyListSCC.get(i).size(); j++){
+                int SCC1 = i;
+                int SCC2 = adjacencyListSCC.get(i).get(j);
+                if(SCC1 != SCC2){
+                    System.out.println("Adding edge between " + SCC1 + " and " + SCC2);
+                    Edge edge = new Edge(this.nodeManager.getNodeByLabel(Integer.toString(SCC1)), this.nodeManager.getNodeByLabel(Integer.toString(SCC2)));
+                    addEdge(edge);
+                }
+            }
+        }
+
+        this.repaint();
+        /*
+        //convert the adjacency list into the newEdges array
+        for(int i = 0; i < adjacencyListSCC.size(); i++){
+            for(int j = 0; j < adjacencyListSCC.get(i).size(); j++){
+                int SCC1 = i;
+                int SCC2 = adjacencyListSCC.get(i).get(j);
+                if(SCC1 != SCC2){
+                    Edge edge = new Edge(newNodes.get(SCC1), newNodes.get(SCC2));
+                    addEdge(edge);
+                }
+            }
+        }*/
     }
 }

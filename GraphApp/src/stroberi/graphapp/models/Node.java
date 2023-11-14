@@ -8,7 +8,7 @@ public class Node {
     private int xOffset; // offset from mouse click to node center
     private int yOffset; // offset from mouse click to node center
     private final int radius;
-    private final String label;
+    private String label;
     private boolean selected = false;
 
     private Color nodeColor = Color.WHITE;
@@ -64,6 +64,9 @@ public class Node {
         return radius;
     }
 
+    public void setLabel(String label) {
+        this.label = label;
+    }
     public String getLabel() {
         return label;
     }

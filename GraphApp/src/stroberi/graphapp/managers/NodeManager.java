@@ -69,6 +69,17 @@ public class NodeManager {
         graphPanel.getAdjacencyMatrix().saveMatrixToFile();
     }
 
+    public void removeAllNodes() {
+        ArrayList<Node> nodesToRemove = new ArrayList<>();
+        for(Node node : graphPanel.getNodes()){
+            nodesToRemove.add(node);
+        }
+        for(Node node : nodesToRemove){
+            graphPanel.getEdgeManager().removeEdges(node);
+            removeNode(node);
+        }
+    }
+
     public void toggleNodeSelection(Node node) {
         if(selectedNodes.contains(node)) {
             node.unselect();
@@ -118,6 +129,14 @@ public class NodeManager {
         return false;
     }
 
+    public Node getNodeByLabel(String label){
+        for(Node node : graphPanel.getNodes()){
+            if(node.getLabel().equals(label)){
+                return node;
+            }
+        }
+        return null;
+    }
     public void generateRandomNodes(int count){
         //clear the current nodes
         ArrayList<Node> nodesToRemove = new ArrayList<>();

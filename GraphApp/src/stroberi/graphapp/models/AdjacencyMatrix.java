@@ -5,6 +5,7 @@ import stroberi.graphapp.GraphPanel;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,12 +105,28 @@ public class AdjacencyMatrix {
     }
 
     //get neighbors of a node
-    public ArrayList<Node> getNeighbors(Node node) {
+    public ArrayList<Node> getNeighborsDirected(Node node) {
         ArrayList<Node> neighbors = new ArrayList<>();
         int nodeIndex = Integer.parseInt(node.getLabel());
         for (int i = 0; i < matrix.get(nodeIndex).size(); i++) {
             if (matrix.get(nodeIndex).get(i) == 1) {
                 neighbors.add(graphPanel.getNodes().get(i));
+            }
+        }
+        return neighbors;
+    }
+
+    public ArrayList<Node> getNeighborsDirected(Node node, ArrayList<Edge> transposedEdges){
+        ArrayList<Node> neighbors = new ArrayList<>();
+        int nodeIndex = Integer.parseInt(node.getLabel());
+        for (int i = 0; i < matrix.get(nodeIndex).size(); i++) {
+            if (matrix.get(nodeIndex).get(i) == 1) {
+                neighbors.add(graphPanel.getNodes().get(i));
+            }
+        }
+        for(Edge edge : transposedEdges){
+            if(edge.getEnd() == node){
+                neighbors.add(edge.getStart());
             }
         }
         return neighbors;
@@ -132,4 +149,18 @@ public class AdjacencyMatrix {
         return neighbors;
     }
 
+    public AdjacencyMatrix transpose(){
+        AdjacencyMatrix transpose = new AdjacencyMatrix(graphPanel, filePath);
+        transpose.resizeMatrix(matrix.size());
+        for(int i = 0; i < matrix.size(); i++){
+            for(int j = 0; j < matrix.size(); j++){
+                transpose.matrix.get(i).set(j, matrix.get(j).get(i));
+            }
+        }
+        return transpose;
+    }
+
+    public int getSize() {
+        return matrix.size();
+    }
 }

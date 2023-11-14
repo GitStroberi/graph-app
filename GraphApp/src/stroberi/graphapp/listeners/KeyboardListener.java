@@ -48,6 +48,10 @@ public class KeyboardListener implements KeyListener {
         if(key == KeyEvent.VK_A){
             graphPanel.findConnectedComponents();
         }
+
+        if(key == KeyEvent.VK_S){
+            graphPanel.redrawAsSCCs();
+        }
     }
 
     @Override
