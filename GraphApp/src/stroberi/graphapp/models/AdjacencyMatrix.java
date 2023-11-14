@@ -5,7 +5,6 @@ import stroberi.graphapp.GraphPanel;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +59,7 @@ public class AdjacencyMatrix {
         //set both the start and end to 0 because the graph is undirected
         matrix.get(start).set(end, 0);
 
-        if (!graphPanel.getIsDirected()) {
+        if (graphPanel.getIsUndirected()) {
             matrix.get(end).set(start, 0);
         }
         //printMatrix();
@@ -75,7 +74,7 @@ public class AdjacencyMatrix {
 
         //set both the start and end to 1 because the graph is undirected
         matrix.get(start).set(end, 1);
-        if (!graphPanel.getIsDirected()) {
+        if (graphPanel.getIsUndirected()) {
             matrix.get(end).set(start, 1);
         }
         //printMatrix();

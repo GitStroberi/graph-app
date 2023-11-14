@@ -26,7 +26,7 @@ public class KeyboardListener implements KeyListener {
             // System.out.println("Space pressed");
             graphPanel.toggleGraphMode();
         }
-        if(!graphPanel.getIsDirected()){
+        if(graphPanel.getIsUndirected()){
             edgeManager.createUndirectedEdges();
         }
         if (key == KeyEvent.VK_C){

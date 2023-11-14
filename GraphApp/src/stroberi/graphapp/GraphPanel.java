@@ -12,15 +12,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class GraphPanel extends JPanel{
     Properties prop = new Properties();
     private final ArrayList<Node> nodes;
     private final ArrayList<Edge> edges;
-
-    private ArrayList<ArrayList<Node>> connectedComponents = new ArrayList<>();
+    private final ArrayList<ArrayList<Node>> connectedComponents = new ArrayList<>();
     private final AdjacencyMatrix adjacencyMatrix;
     private final ArrayList<Integer> availableLabels;
     private final ArrayList<Node> selectedNodes;
@@ -215,8 +213,8 @@ public class GraphPanel extends JPanel{
         this.repaint();
         // System.out.println("Graph mode: " + (isDirected ? "Directed is true" : "Directed is false"));
     }
-    public boolean getIsDirected() {
-        return isDirected;
+    public boolean getIsUndirected() {
+        return !isDirected;
     }
 
     public NodeManager getNodeManager() {
@@ -347,24 +345,7 @@ public class GraphPanel extends JPanel{
     public void redrawAsSCCs(){
         ArrayList<ArrayList<Node>> connectedComponents = kosaraju(adjacencyMatrix);
 
-        ArrayList<Node> newNodes = new ArrayList<>();
-
-        int newLabel = 0;
-
-        //create the new nodes by finding the center of each connected component
-        for(ArrayList<Node> connectedComponent : connectedComponents){
-            int x = 0;
-            int y = 0;
-            for(Node n : connectedComponent){
-                x += n.getX();
-                y += n.getY();
-            }
-            x /= connectedComponent.size();
-            y /= connectedComponent.size();
-            Node newNode = new Node(x, y, nodeSize, Integer.toString(newLabel++));
-            newNodes.add(newNode);
-        }
-        newLabel = 0;
+        ArrayList<Node> newNodes = getSCCNodes(connectedComponents);
 
         //adjacency list for the SCCs to remember which SCCs are connected
         ArrayList<ArrayList<Integer>> adjacencyListSCC = new ArrayList<>();
@@ -375,7 +356,6 @@ public class GraphPanel extends JPanel{
             for(Node n : CC){
                 for(Node neighbor : adjacencyMatrix.getNeighborsDirected(n)){
                     if(!CC.contains(neighbor)){
-                        int SCCNode = Integer.parseInt(neighbor.getLabel());
                         int SCC = -1;
                         //see in which SCC the node
                         for(int i = 0; i < connectedComponents.size(); i++){
@@ -408,11 +388,10 @@ public class GraphPanel extends JPanel{
         //add the edges between the new nodes, based on the adjacency list (now each node label is the index in the adjacency list)
         for(int i = 0; i < adjacencyListSCC.size(); i++){
             for(int j = 0; j < adjacencyListSCC.get(i).size(); j++){
-                int SCC1 = i;
                 int SCC2 = adjacencyListSCC.get(i).get(j);
-                if(SCC1 != SCC2){
-                    System.out.println("Adding edge between " + SCC1 + " and " + SCC2);
-                    Edge edge = new Edge(this.nodeManager.getNodeByLabel(Integer.toString(SCC1)), this.nodeManager.getNodeByLabel(Integer.toString(SCC2)));
+                if(i != SCC2){
+                    System.out.println("Adding edge between " + i + " and " + SCC2);
+                    Edge edge = new Edge(this.nodeManager.getNodeByLabel(Integer.toString(i)), this.nodeManager.getNodeByLabel(Integer.toString(SCC2)));
                     addEdge(edge);
                 }
             }
@@ -431,5 +410,26 @@ public class GraphPanel extends JPanel{
                 }
             }
         }*/
+    }
+
+    private ArrayList<Node> getSCCNodes(ArrayList<ArrayList<Node>> connectedComponents) {
+        ArrayList<Node> newNodes = new ArrayList<>();
+
+        int newLabel = 0;
+
+        //create the new nodes by finding the center of each connected component
+        for(ArrayList<Node> connectedComponent : connectedComponents){
+            int x = 0;
+            int y = 0;
+            for(Node n : connectedComponent){
+                x += n.getX();
+                y += n.getY();
+            }
+            x /= connectedComponent.size();
+            y /= connectedComponent.size();
+            Node newNode = new Node(x, y, nodeSize, Integer.toString(newLabel++));
+            newNodes.add(newNode);
+        }
+        return newNodes;
     }
 }

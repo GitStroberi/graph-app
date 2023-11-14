@@ -21,7 +21,7 @@ public class EdgeManager {
         Edge edge = new Edge(selectedNodes.get(0), selectedNodes.get(1));
         graphPanel.addEdge(edge);
 
-        if(!graphPanel.getIsDirected()){
+        if(graphPanel.getIsUndirected()){
             // System.out.println("Entered if because graph is undirected (createEdge)");
             Edge edge2 = new Edge(selectedNodes.get(1), selectedNodes.get(0));
             graphPanel.addEdge(edge2);
@@ -40,7 +40,7 @@ public class EdgeManager {
         //Edge edge2 = graphPanel.getEdge(edge.getEnd(), edge.getStart());
         //graphPanel.removeEdge(edge2);
 
-        if(!graphPanel.getIsDirected()){
+        if(graphPanel.getIsUndirected()){
             // System.out.println("Entered if because graph is undirected (removeEdge)");
             Edge edge2 = graphPanel.getEdge(edge.getEnd(), edge.getStart());
             if (edge2 != null){
@@ -127,7 +127,7 @@ public class EdgeManager {
         //in case the graph is undirected, to avoid giving the same edge two chances,
         //after we are finished with a node, we remove it from the list so that it won't be checked again
         ArrayList<Node> tempNodes = new ArrayList<>(graphPanel.getNodes());
-        if(!graphPanel.getIsDirected()){
+        if(graphPanel.getIsUndirected()){
             for(Node node1 : graphPanel.getNodes()){
                 for(Node node2 : tempNodes){
                     if(node1 != node2){
