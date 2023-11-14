@@ -1,5 +1,7 @@
 package stroberi.graphapp.models;
 
+import java.awt.*;
+
 public class Node {
     private int x;
     private int y;
@@ -8,6 +10,8 @@ public class Node {
     private final int radius;
     private final String label;
     private boolean selected = false;
+
+    private Color nodeColor = Color.WHITE;
 
     public Node(int x, int y, int radius, String label) {
         this.x = x;
@@ -62,5 +66,13 @@ public class Node {
 
     public String getLabel() {
         return label;
+    }
+
+    public void setColor(Color nodeColor) {
+        this.nodeColor = nodeColor;
+    }
+
+    public Color getColor() {
+        return nodeColor;
     }
 }

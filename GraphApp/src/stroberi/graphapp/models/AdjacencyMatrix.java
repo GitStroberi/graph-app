@@ -102,4 +102,34 @@ public class AdjacencyMatrix {
             e.printStackTrace();
         }
     }
+
+    //get neighbors of a node
+    public ArrayList<Node> getNeighbors(Node node) {
+        ArrayList<Node> neighbors = new ArrayList<>();
+        int nodeIndex = Integer.parseInt(node.getLabel());
+        for (int i = 0; i < matrix.get(nodeIndex).size(); i++) {
+            if (matrix.get(nodeIndex).get(i) == 1) {
+                neighbors.add(graphPanel.getNodes().get(i));
+            }
+        }
+        return neighbors;
+    }
+
+    //get neighbors as if the edges are undirected
+    public ArrayList<Node> getNeighborsUndirected(Node node) {
+        ArrayList<Node> neighbors = new ArrayList<>();
+        int nodeIndex = Integer.parseInt(node.getLabel());
+        for (int i = 0; i < matrix.get(nodeIndex).size(); i++) {
+            if (matrix.get(nodeIndex).get(i) == 1) {
+                neighbors.add(graphPanel.getNodes().get(i));
+            }
+        }
+        for (int i = 0; i < matrix.size(); i++) {
+            if (matrix.get(i).get(nodeIndex) == 1) {
+                neighbors.add(graphPanel.getNodes().get(i));
+            }
+        }
+        return neighbors;
+    }
+
 }

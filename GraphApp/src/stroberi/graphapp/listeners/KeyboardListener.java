@@ -45,6 +45,9 @@ public class KeyboardListener implements KeyListener {
             graphPanel.getNodeManager().generateRandomNodes(numberOfNodes);
             graphPanel.getEdgeManager().createPartialGraph(chanceOfEdges);
         }
+        if(key == KeyEvent.VK_A){
+            graphPanel.findConnectedComponents();
+        }
     }
 
     @Override

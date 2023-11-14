@@ -12,15 +12,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Properties;
-
-import java.util.Scanner;
+import java.util.*;
 
 public class GraphPanel extends JPanel{
     Properties prop = new Properties();
     private final ArrayList<Node> nodes;
     private final ArrayList<Edge> edges;
+
+    private ArrayList<ArrayList<Node>> connectedComponents = new ArrayList<>();
     private final AdjacencyMatrix adjacencyMatrix;
     private final ArrayList<Integer> availableLabels;
     private final ArrayList<Node> selectedNodes;
@@ -88,7 +87,7 @@ public class GraphPanel extends JPanel{
 
         // Draw the nodes
         for (Node node : nodes) {
-            g.setColor(Color.WHITE);
+            g.setColor(node.getColor());
             g.fillOval(node.getX()-nodeSize/2, node.getY()-nodeSize/2, node.getRadius(), node.getRadius());
             g.setColor(Color.BLACK);
 
@@ -225,5 +224,60 @@ public class GraphPanel extends JPanel{
 
     public Scanner getScanner() {
         return scanner;
+    }
+
+    private Color getRandomColor() {
+        // Generate a random color (you can customize this logic)
+        return new Color((int) (Math.random() * 0x1000000));
+    }
+
+    //function that finds the connected components of the graph (implement dfs in a later function)
+    public void findConnectedComponents(){
+        //reset the connected components
+        connectedComponents.clear();
+        //reset the colors of the nodes
+        for(Node n : nodes){
+            n.setColor(Color.WHITE);
+        }
+        //find the connected components
+        for(Node n : nodes){
+            if(n.getColor() == Color.WHITE){
+                ArrayList<Node> connectedComponent = new ArrayList<>();
+                dfsUndirected(n, connectedComponent);
+                connectedComponents.add(connectedComponent);
+            }
+        }
+        //print the connected components
+        System.out.println("The connected components are: ");
+        for(ArrayList<Node> connectedComponent : connectedComponents){
+            System.out.print("[");
+            for(Node n : connectedComponent){
+                System.out.print(n.getLabel() + " ");
+            }
+            System.out.println("]");
+        }
+        //color the connected components
+        for(ArrayList<Node> connectedComponent : connectedComponents){
+            Color color = getRandomColor();
+            for(Node n : connectedComponent){
+                n.setColor(color);
+            }
+        }
+        //repaint the graph
+        this.repaint();
+    }
+    public void dfsUndirected(Node n, ArrayList<Node> connectedComponent){
+        Stack<Node> stack = new Stack<>();
+        stack.push(n);
+        while(!stack.isEmpty()){
+            Node current = stack.pop();
+            if(current.getColor() == Color.WHITE){
+                current.setColor(Color.GRAY);
+                connectedComponent.add(current);
+                for(Node neighbor : adjacencyMatrix.getNeighborsUndirected(current)){
+                    stack.push(neighbor);
+                }
+            }
+        }
     }
 }
