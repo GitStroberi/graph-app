@@ -347,46 +347,64 @@ public class GraphPanel extends JPanel{
 
         ArrayList<Node> newNodes = getSCCNodes(connectedComponents);
 
-        //adjacency list for the SCCs to remember which SCCs are connected
-        ArrayList<ArrayList<Integer>> adjacencyListSCC = new ArrayList<>();
+        //adjacency list of sccs as a map that takes in a node and as value has an array of the adjacent nodes
+        //the node is the newly created SCC, and the adjacent nodes are the nodes that represent other SCCs and are adjacent to the current SCC
+        HashMap<Node, ArrayList<Node>> adjacencyListSCC = new HashMap<>();
 
-        //if an edge exists between SCC A and SCC B, mark in the adjacency list that A is adjacent to B
-        for(ArrayList<Node> CC : connectedComponents){
-            ArrayList<Integer> adjacentSCCs = new ArrayList<>();
-            for(Node n : CC){
-                for(Node neighbor : adjacencyMatrix.getNeighborsDirected(n)){
-                    if(!CC.contains(neighbor)){
-                        int SCC = -1;
-                        //see in which SCC the node
-                        for(int i = 0; i < connectedComponents.size(); i++){
-                            if(connectedComponents.get(i).contains(neighbor)){
-                                SCC = i;
-                                break;
-                            }
-                        }
-                        if(!adjacentSCCs.contains(SCC)){
-                            adjacentSCCs.add(SCC);
+        //create the adjacency list for the SCCs
+        for(int i = 0; i < connectedComponents.size(); i++){
+            ArrayList<Node> adjacentNodes = new ArrayList<>();
+            for(int j = 0; j < connectedComponents.size(); j++){
+                if(i != j){
+                    for(Node n : connectedComponents.get(j)){
+                        if(adjacencyMatrix.getNeighborsDirected(n).contains(connectedComponents.get(i).get(0))){
+                            adjacentNodes.add(newNodes.get(j));
+                            break;
                         }
                     }
                 }
             }
-            adjacencyListSCC.add(adjacentSCCs);
+            adjacencyListSCC.put(newNodes.get(i), adjacentNodes);
+        }
+
+        System.out.println("The adjacency list for the SCCs is: ");
+        for(Node n : adjacencyListSCC.keySet()){
+            System.out.print(n.getLabel() + ": ");
+            for(Node neighbor : adjacencyListSCC.get(n)){
+                System.out.print(neighbor.getLabel() + " ");
+            }
+            System.out.println();
         }
 
         nodeManager.removeAllNodes();
 
-        //add the new nodes to the graph
+        //add the new nodes to the graph array, and remove those labels from the available labels
         for(Node n : newNodes){
-            nodeManager.createNode(n.getX(), n.getY());
+            nodeManager.createNode(n);
+            //remove the label from the available labels
         }
 
-        System.out.println("Created the new nodes:");
-        for(Node n : newNodes){
-            System.out.println(n.getLabel());
+        System.out.println("The new nodes are: ");
+        for(Node n : nodes){
+            System.out.print(n.getLabel() + ", ");
+        }
+
+        //resize and save the adjacency matrix
+        adjacencyMatrix.resizeMatrix(newNodes.size());
+        adjacencyMatrix.saveMatrixToFile();
+
+        //add the edges between the new nodes, based on the adjacency list
+        for(Node n : adjacencyListSCC.keySet()){
+            for(Node neighbor : adjacencyListSCC.get(n)){
+                if(n != neighbor){
+                    Edge edge = new Edge(neighbor, n);
+                    addEdge(edge);
+                }
+            }
         }
 
         //add the edges between the new nodes, based on the adjacency list (now each node label is the index in the adjacency list)
-        for(int i = 0; i < adjacencyListSCC.size(); i++){
+        /*for(int i = 0; i < adjacencyListSCC.size(); i++){
             for(int j = 0; j < adjacencyListSCC.get(i).size(); j++){
                 int SCC2 = adjacencyListSCC.get(i).get(j);
                 if(i != SCC2){
@@ -395,7 +413,7 @@ public class GraphPanel extends JPanel{
                     addEdge(edge);
                 }
             }
-        }
+        }*/
 
         this.repaint();
         /*
@@ -428,6 +446,8 @@ public class GraphPanel extends JPanel{
             x /= connectedComponent.size();
             y /= connectedComponent.size();
             Node newNode = new Node(x, y, nodeSize, Integer.toString(newLabel++));
+            //remove the label from the available labels
+            removeAvailableLabel(newLabel-1);
             newNodes.add(newNode);
         }
         return newNodes;

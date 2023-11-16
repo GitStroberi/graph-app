@@ -177,4 +177,10 @@ public class EdgeManager {
         graphPanel.getAdjacencyMatrix().saveMatrixToFile();
         graphPanel.repaint();
     }
+
+    public void printEdges() {
+        for(Edge edge : graphPanel.getEdges()) {
+            System.out.println(edge.getStart().getLabel() + " " + edge.getEnd().getLabel());
+        }
+    }
 }

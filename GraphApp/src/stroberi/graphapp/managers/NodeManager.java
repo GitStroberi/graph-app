@@ -46,6 +46,20 @@ public class NodeManager {
         graphPanel.getAdjacencyMatrix().saveMatrixToFile();
     }
 
+    public void createNode(Node node) {
+        graphPanel.addNode(node);
+
+        //check if the added label is the biggest label
+        if(Integer.parseInt(node.getLabel()) > graphPanel.getBiggestLabel()){
+            graphPanel.setBiggestLabel(Integer.parseInt(node.getLabel()));
+        }
+
+        //resize the adjacency matrix
+        graphPanel.getAdjacencyMatrix().resizeMatrix(graphPanel.getBiggestLabel()+1);
+        // graphPanel.getAdjacencyMatrix().printMatrix();
+        graphPanel.getAdjacencyMatrix().saveMatrixToFile();
+    }
+
     public void removeNode(Node node) {
         graphPanel.removeNode(node);
         graphPanel.getSelectedNodes().remove(node);
@@ -74,6 +88,7 @@ public class NodeManager {
         for(Node node : graphPanel.getNodes()){
             nodesToRemove.add(node);
         }
+
         for(Node node : nodesToRemove){
             graphPanel.getEdgeManager().removeEdges(node);
             removeNode(node);

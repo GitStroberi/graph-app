@@ -52,6 +52,8 @@ public class KeyboardListener implements KeyListener {
         if(key == KeyEvent.VK_S){
             graphPanel.redrawAsSCCs();
         }
+
+        graphPanel.getEdgeManager().printEdges();
     }
 
     @Override
