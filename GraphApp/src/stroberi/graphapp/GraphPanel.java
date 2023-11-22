@@ -423,75 +423,6 @@ public class GraphPanel extends JPanel{
         }
     }
 
-    public void findAndPrintRoot() {
-        if (isAcyclic() && isQuasiStronglyConnected()) {
-            Node rootNode = findRootNode();
-            if (rootNode != null) {
-                System.out.println("The root node of the arborescence is: " + rootNode.getLabel());
-            } else {
-                System.out.println("The graph is acyclic and quasi-strongly connected, but the root node could not be determined.");
-            }
-        } else {
-            System.out.println("The graph is not an arborescence.");
-        }
-    }
-
-    public boolean isQuasiStronglyConnected() {
-        for (Node startNode : nodes) {
-            for (Node endNode : nodes) {
-                if (startNode != endNode) {
-                    if (!isReachable(startNode, endNode) && !isReachable(endNode, startNode)) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
-    }
-
-    private boolean isReachable(Node start, Node end) {
-        boolean[] visited = new boolean[nodes.size()];
-        Stack<Node> stack = new Stack<>();
-        stack.push(start);
-
-        while (!stack.isEmpty()) {
-            Node currentNode = stack.pop();
-            int currentNodeIndex = Integer.parseInt(currentNode.getLabel());
-
-            if (!visited[currentNodeIndex]) {
-                visited[currentNodeIndex] = true;
-
-                for (Node neighbor : getNeighboursDirected(currentNode, getEdges())) {
-                    stack.push(neighbor);
-
-                    if (neighbor == end) {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private Node findRootNode() {
-        for (Node node : nodes) {
-            if (isRoot(node)) {
-                return node;
-            }
-        }
-        return null;
-    }
-
-    private boolean isRoot(Node node) {
-        for (Node otherNode : nodes) {
-            if (node != otherNode && isReachable(otherNode, node)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public ArrayList<Edge> getReverseEdges(){
         ArrayList<Edge> reverseEdges = new ArrayList<>();
         for(Edge e : edges){
@@ -604,6 +535,57 @@ public class GraphPanel extends JPanel{
             }
         }
         this.repaint();
+    }
+
+    public Node findRoot() {
+        for(Node n : nodes){
+            n.setColor(Color.WHITE);
+        }
+        this.repaint();
+        if (!isDirected) {
+            System.out.println("The graph is not directed. Arborescence requires a directed graph.");
+            return null;
+        }
+
+        if (!isAcyclic()) {
+            System.out.println("The graph is not acyclic. Arborescence must be acyclic.");
+            return null;
+        }
+
+        int inDegreeZeroCount = 0;
+        Node potentialRoot = null;
+
+        // Count nodes with in-degree 0 and store them in potentialRoot
+        for (Node node : nodes) {
+            int inDegree = 0;
+            for (Edge edge : edges) {
+                if (edge.getEnd() == node) {
+                    inDegree++;
+                }
+            }
+
+            if (inDegree == 0) {
+                inDegreeZeroCount++;
+                potentialRoot = node;
+            }
+        }
+
+        if (inDegreeZeroCount == 1) {
+            System.out.println("The graph is an arborescence, and the root is: " + potentialRoot.getLabel());
+            //color the root node green and the rest of the nodes white
+            for(Node n : nodes){
+                if(n.isEqual(potentialRoot)){
+                    n.setColor(Color.GREEN);
+                } else {
+                    n.setColor(Color.WHITE);
+                }
+            }
+            this.repaint();
+            return potentialRoot;
+        } else {
+            System.out.println("The graph is not an arborescence.");
+        }
+        return null;
     }
 
     private ArrayList<Node> getSCCNodes(ArrayList<ArrayList<Node>> connectedComponents) {

@@ -59,13 +59,7 @@ public class KeyboardListener implements KeyListener {
         }
 
         if(key == KeyEvent.VK_K){
-            //display the neighbours of every node
-            for(Node n : graphPanel.getNodes()){
-                System.out.println("Node " + n.getLabel() + " has neighbours: ");
-                for(Node neighbour : graphPanel.getNeighboursDirected(n, graphPanel.getEdges())){
-                    System.out.println(neighbour.getLabel());
-                }
-            }
+            graphPanel.findRoot();
         }
     }
 

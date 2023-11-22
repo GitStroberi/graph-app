@@ -1,6 +1,7 @@
 package stroberi.graphapp.models;
 
 import java.awt.*;
+import java.util.Objects;
 
 public class Node {
     private int x;
@@ -77,5 +78,13 @@ public class Node {
 
     public Color getColor() {
         return nodeColor;
+    }
+
+    public boolean isEqual(Node otherNode) {
+        // Compare each member variable
+        return this.x == otherNode.x &&
+                this.y == otherNode.y &&
+                this.radius == otherNode.radius &&
+                Objects.equals(this.label, otherNode.label);
     }
 }
