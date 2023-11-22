@@ -383,8 +383,8 @@ public class GraphPanel extends JPanel{
     }
 
     public boolean isAcyclic() {
-        boolean[] visited = new boolean[nodes.size()];
-        boolean[] recursionStack = new boolean[nodes.size()];
+        boolean[] visited = new boolean[biggestLabel + 1];
+        boolean[] recursionStack = new boolean[biggestLabel + 1];
 
         for (Node node : nodes) {
             if (!visited[Integer.parseInt(node.getLabel())]) {
