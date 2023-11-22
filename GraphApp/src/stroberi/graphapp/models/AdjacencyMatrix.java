@@ -109,7 +109,7 @@ public class AdjacencyMatrix {
         int nodeIndex = Integer.parseInt(node.getLabel());
         for (int i = 0; i < matrix.get(nodeIndex).size(); i++) {
             if (matrix.get(nodeIndex).get(i) == 1) {
-                neighbors.add(graphPanel.getNodes().get(i));
+                neighbors.add(graphPanel.getNodes().get(i)); ///ACI CRAPA!!!!! NU E BINE PT CA IA LABEL DIN SCC cred
             }
         }
         return neighbors;
@@ -161,5 +161,14 @@ public class AdjacencyMatrix {
 
     public int getSize() {
         return matrix.size();
+    }
+
+    public Edge getEdge(Node n1, Node n2) {
+        int n1Index = Integer.parseInt(n1.getLabel());
+        int n2Index = Integer.parseInt(n2.getLabel());
+        if (matrix.get(n1Index).get(n2Index) == 1) {
+            return new Edge(n1, n2);
+        }
+        return null;
     }
 }
