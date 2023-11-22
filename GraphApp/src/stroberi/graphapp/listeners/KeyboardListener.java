@@ -2,6 +2,7 @@ package stroberi.graphapp.listeners;
 
 import stroberi.graphapp.managers.EdgeManager;
 import stroberi.graphapp.GraphPanel;
+import stroberi.graphapp.models.Node;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -53,7 +54,19 @@ public class KeyboardListener implements KeyListener {
             graphPanel.redrawAsSCCs();
         }
 
-        graphPanel.getEdgeManager().printEdges();
+        if(key == KeyEvent.VK_T){
+            graphPanel.topologicalSort();
+        }
+
+        if(key == KeyEvent.VK_K){
+            //display the neighbours of every node
+            for(Node n : graphPanel.getNodes()){
+                System.out.println("Node " + n.getLabel() + " has neighbours: ");
+                for(Node neighbour : graphPanel.getNeighboursDirected(n, graphPanel.getEdges())){
+                    System.out.println(neighbour.getLabel());
+                }
+            }
+        }
     }
 
     @Override

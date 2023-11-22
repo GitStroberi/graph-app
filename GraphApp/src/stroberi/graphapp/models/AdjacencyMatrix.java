@@ -103,62 +103,6 @@ public class AdjacencyMatrix {
         }
     }
 
-    //get neighbors of a node
-    public ArrayList<Node> getNeighborsDirected(Node node) {
-        ArrayList<Node> neighbors = new ArrayList<>();
-        int nodeIndex = Integer.parseInt(node.getLabel());
-        for (int i = 0; i < matrix.get(nodeIndex).size(); i++) {
-            if (matrix.get(nodeIndex).get(i) == 1) {
-                neighbors.add(graphPanel.getNodes().get(i)); ///ACI CRAPA!!!!! NU E BINE PT CA IA LABEL DIN SCC cred
-            }
-        }
-        return neighbors;
-    }
-
-    public ArrayList<Node> getNeighborsDirected(Node node, ArrayList<Edge> transposedEdges){
-        ArrayList<Node> neighbors = new ArrayList<>();
-        int nodeIndex = Integer.parseInt(node.getLabel());
-        for (int i = 0; i < matrix.get(nodeIndex).size(); i++) {
-            if (matrix.get(nodeIndex).get(i) == 1) {
-                neighbors.add(graphPanel.getNodes().get(i));
-            }
-        }
-        for(Edge edge : transposedEdges){
-            if(edge.getEnd() == node){
-                neighbors.add(edge.getStart());
-            }
-        }
-        return neighbors;
-    }
-
-    //get neighbors as if the edges are undirected
-    public ArrayList<Node> getNeighborsUndirected(Node node) {
-        ArrayList<Node> neighbors = new ArrayList<>();
-        int nodeIndex = Integer.parseInt(node.getLabel());
-        for (int i = 0; i < matrix.get(nodeIndex).size(); i++) {
-            if (matrix.get(nodeIndex).get(i) == 1) {
-                neighbors.add(graphPanel.getNodes().get(i));
-            }
-        }
-        for (int i = 0; i < matrix.size(); i++) {
-            if (matrix.get(i).get(nodeIndex) == 1) {
-                neighbors.add(graphPanel.getNodes().get(i));
-            }
-        }
-        return neighbors;
-    }
-
-    public AdjacencyMatrix transpose(){
-        AdjacencyMatrix transpose = new AdjacencyMatrix(graphPanel, filePath);
-        transpose.resizeMatrix(matrix.size());
-        for(int i = 0; i < matrix.size(); i++){
-            for(int j = 0; j < matrix.size(); j++){
-                transpose.matrix.get(i).set(j, matrix.get(j).get(i));
-            }
-        }
-        return transpose;
-    }
-
     public int getSize() {
         return matrix.size();
     }
