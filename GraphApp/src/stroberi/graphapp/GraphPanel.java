@@ -7,6 +7,7 @@ import stroberi.graphapp.managers.NodeManager;
 import stroberi.graphapp.models.AdjacencyMatrix;
 import stroberi.graphapp.models.Edge;
 import stroberi.graphapp.models.Node;
+import stroberi.graphapp.utils.DisjointSet;
 
 import javax.swing.*;
 import java.awt.*;
@@ -641,5 +642,92 @@ public class GraphPanel extends JPanel{
             e.setWeight(weight);
             getEdge(e.getEnd(), e.getStart()).setWeight(weight);
         }
+        this.repaint();
+    }
+
+    // Prim's algorithm
+    public ArrayList<Edge> prim() {
+        if (isDirected) {
+            System.out.println("The graph must be undirected for Prim's algorithm.");
+            return null;
+        }
+
+        Node root = nodes.get(0);
+        PriorityQueue<Edge> priorityQueue = new PriorityQueue<>(new Comparator<Edge>() {
+            @Override
+            public int compare(Edge edge1, Edge edge2) {
+                return edge1.getWeight() - edge2.getWeight();
+            }
+        });
+        HashSet<Node> visited = new HashSet<>();
+        ArrayList<Edge> minimumSpanningTree = new ArrayList<>();
+
+        visited.add(root);
+        for (Edge e : edges) {
+            if (e.getStart() == root) {
+                priorityQueue.add(e);
+            }
+        }
+
+        while (!priorityQueue.isEmpty()) {
+            Edge currentEdge = priorityQueue.poll();
+            Node currentNode = currentEdge.getEnd();
+            if (!visited.contains(currentNode)) {
+                minimumSpanningTree.add(currentEdge);
+                visited.add(currentNode);
+                for (Edge e : edges) {
+                    if (e.getStart() == currentNode) {
+                        priorityQueue.add(e);
+                    }
+                }
+            }
+        }
+
+        System.out.println("The minimum spanning tree is: ");
+        for (Edge e : minimumSpanningTree) {
+            System.out.println(e.getStart().getLabel() + " " + e.getEnd().getLabel() + ":" + e.getWeight());
+        }
+
+        return minimumSpanningTree;
+    }
+
+    // Kruskal's algorithm
+    public ArrayList<Edge> kruskal() {
+        if (isDirected) {
+            System.out.println("The graph must be undirected for Kruskal's algorithm.");
+            return null;
+        }
+
+        ArrayList<Edge> minimumSpanningTree = new ArrayList<>();
+        PriorityQueue<Edge> priorityQueue = new PriorityQueue<>(new Comparator<Edge>() {
+            @Override
+            public int compare(Edge edge1, Edge edge2) {
+                return edge1.getWeight() - edge2.getWeight();
+            }
+        });
+
+        for (Edge e : edges) {
+            priorityQueue.add(e);
+        }
+
+        DisjointSet disjointSet = new DisjointSet(nodes.size());
+
+        while (!priorityQueue.isEmpty()) {
+            Edge currentEdge = priorityQueue.poll();
+            int start = Integer.parseInt(currentEdge.getStart().getLabel());
+            int end = Integer.parseInt(currentEdge.getEnd().getLabel());
+
+            if (disjointSet.find(start) != disjointSet.find(end)) {
+                disjointSet.union(start, end);
+                minimumSpanningTree.add(currentEdge);
+            }
+        }
+
+        System.out.println("The minimum spanning tree is: ");
+        for (Edge e : minimumSpanningTree) {
+            System.out.println(e.getStart().getLabel() + " " + e.getEnd().getLabel() + ":" + e.getWeight());
+        }
+
+        return minimumSpanningTree;
     }
 }
