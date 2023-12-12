@@ -83,6 +83,9 @@ public class GraphPanel extends JPanel{
             if(isDirected){
                 drawArrow(g, start.getX(), start.getY(), arrowX, arrowY, arrowSize, nodeSize/2);
             }
+            else {
+                drawEdgeWeight(g, edge, start.getX(), start.getY(), end.getX(), end.getY());
+            }
         }
 
         // Draw the nodes
@@ -133,6 +136,19 @@ public class GraphPanel extends JPanel{
 
         // Restore the previous transformation state
         g2.setTransform(savedTransform);
+    }
+
+    public void drawEdgeWeight(Graphics g, Edge edge, int x1, int y1, int x2, int y2) {
+        //if edge weight is 0, don't draw it
+        if(edge.getWeight() == 0){
+            return;
+        }
+        int weight = edge.getWeight();
+        int x = (x1 + x2) / 2;
+        int y = (y1 + y2) / 2;
+        g.setColor(Color.WHITE);
+        g.drawString(Integer.toString(weight), x, y);
+        g.setColor(Color.BLACK);
     }
 
     public AdjacencyMatrix getAdjacencyMatrix() {
@@ -309,14 +325,9 @@ public class GraphPanel extends JPanel{
     }
 
     private void dfsDirected(Node n, ArrayList<Edge> edges, ArrayList<Node> connectedComponent, boolean[] visited){
-        //iterative dfs
-        //visit the node
         visited[Integer.parseInt(n.getLabel())] = true;
-        //add the node to the connected component
         connectedComponent.add(n);
-        //get the neighbors of the node
         ArrayList<Node> neighbors = getNeighboursDirected(n, edges);
-        //for each neighbor, if it hasn't been visited, visit it
         for(Node neighbor : neighbors) {
             if (!visited[Integer.parseInt(neighbor.getLabel())]) {
                 dfsDirected(neighbor, edges, connectedComponent, visited);
@@ -340,7 +351,7 @@ public class GraphPanel extends JPanel{
         }
     }
 
-    private void fillOrderIterative(AdjacencyMatrix matrix, Node startNode, boolean[] visited, Stack<Node> stack) {
+    private void fillOrderIterative(Node startNode, boolean[] visited, Stack<Node> stack) {
         Stack<Node> callStack = new Stack<>();
         callStack.push(startNode);
 
@@ -413,7 +424,7 @@ public class GraphPanel extends JPanel{
         boolean[] visited = new boolean[adjacencyMatrix.getSize()];
         for(Node n : nodes){
             if(!visited[Integer.parseInt(n.getLabel())]){
-                fillOrderIterative(adjacencyMatrix, n, visited, stack);
+                fillOrderIterative(n, visited, stack);
             }
         }
         //print the topological sort
@@ -437,12 +448,12 @@ public class GraphPanel extends JPanel{
 
         for (Node node : nodes) {
             if (!visited[Integer.parseInt(node.getLabel())]) {
-                fillOrderIterative(matrix, node, visited, stack);
+                fillOrderIterative(node, visited, stack);
             }
         }
 
         visited = new boolean[matrix.getSize()];
-        ArrayList<ArrayList<Node>> connectedComponents = new ArrayList<>();
+        ArrayList<ArrayList<Node>> connectedComponents =  new ArrayList<>();
 
         while (!stack.isEmpty()) {
             Node currentNode = stack.pop();
@@ -608,5 +619,27 @@ public class GraphPanel extends JPanel{
             newNodes.add(newNode);
         }
         return newNodes;
+    }
+
+    public void setEdgeWeights() {
+        //the graph must be undirected
+        if(isDirected){
+            System.out.println("The graph is directed. Edge weights can only be set for undirected graphs.");
+            return;
+        }
+        //for each edge, ask the user to input the weight, and then set it
+        ArrayList<Edge> edgesWithoutReverse = new ArrayList<>();
+        for(Edge e : edges){
+            if(!edgesWithoutReverse.contains(getEdge(e.getEnd(), e.getStart()))){
+                edgesWithoutReverse.add(e);
+            }
+        }
+        //for each edge, ask the user to input the weight, and then set it for both the edge and its reverse
+        for(Edge e : edgesWithoutReverse){
+            System.out.println("Enter the weight for edge " + e.getStart().getLabel() + " " + e.getEnd().getLabel() + ": ");
+            int weight = scanner.nextInt();
+            e.setWeight(weight);
+            getEdge(e.getEnd(), e.getStart()).setWeight(weight);
+        }
     }
 }

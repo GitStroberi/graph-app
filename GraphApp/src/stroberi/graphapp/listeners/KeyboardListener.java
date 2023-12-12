@@ -2,7 +2,6 @@ package stroberi.graphapp.listeners;
 
 import stroberi.graphapp.managers.EdgeManager;
 import stroberi.graphapp.GraphPanel;
-import stroberi.graphapp.models.Node;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -60,6 +59,10 @@ public class KeyboardListener implements KeyListener {
 
         if(key == KeyEvent.VK_K){
             graphPanel.findRoot();
+        }
+
+        if(key == KeyEvent.VK_W){
+            graphPanel.setEdgeWeights();
         }
     }
 
