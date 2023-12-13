@@ -1,5 +1,4 @@
 package stroberi.graphapp.utils;
-
 public class DisjointSet {
 private int[] parent;
     private int[] rank;
@@ -17,12 +16,27 @@ private int[] parent;
         }
     }
 
-    public int find(int x) {
+    public int findRecursive(int x) {
         if (parent[x] != x) {
-            parent[x] = find(parent[x]);
+            parent[x] = findRecursive(parent[x]);
         }
 
         return parent[x];
+    }
+
+    public int find(int x) {
+        int root = x;
+        while (parent[root] != root) {
+            root = parent[root];
+        }
+
+        while (parent[x] != root) {
+            int next = parent[x];
+            parent[x] = root;
+            x = next;
+        }
+
+        return root;
     }
 
     public void union(int x, int y) {

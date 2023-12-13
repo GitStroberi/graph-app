@@ -46,28 +46,27 @@ public class KeyboardListener implements KeyListener {
             graphPanel.getEdgeManager().createPartialGraph(chanceOfEdges);
         }
         if(key == KeyEvent.VK_A){
-            graphPanel.findConnectedComponents();
+            graphPanel.getAlgorithmManager().findConnectedComponents();
         }
 
         if(key == KeyEvent.VK_S){
-            graphPanel.redrawAsSCCs();
+            graphPanel.getUtils().redrawAsSCCs();
         }
 
         if(key == KeyEvent.VK_T){
-            graphPanel.topologicalSort();
+            graphPanel.getAlgorithmManager().topologicalSort();
         }
 
         if(key == KeyEvent.VK_K){
-            graphPanel.findRoot();
+            graphPanel.getAlgorithmManager().findRoot();
         }
 
         if(key == KeyEvent.VK_W){
-            //graphPanel.setEdgeWeights();
-            //System.out.println("Prim's algorithm");
-            //graphPanel.prim();
-            //System.out.println("Kruskal's algorithm");
-            //graphPanel.kruskal();
-            graphPanel.getAdjacencyList().printAdjacencyList();
+            graphPanel.setEdgeWeights();
+            System.out.println("Prim's algorithm");
+            graphPanel.getAlgorithmManager().runPrim();
+            System.out.println("Kruskal's algorithm");
+            graphPanel.getAlgorithmManager().runKruskal();
         }
     }
 
