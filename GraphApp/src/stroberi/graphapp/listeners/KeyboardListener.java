@@ -68,6 +68,10 @@ public class KeyboardListener implements KeyListener {
             System.out.println("Kruskal's algorithm");
             graphPanel.getAlgorithmManager().runKruskal();
         }
+
+        if(key == KeyEvent.VK_F){
+            graphPanel.getEdgeManager().resetEdges();
+        }
     }
 
     @Override

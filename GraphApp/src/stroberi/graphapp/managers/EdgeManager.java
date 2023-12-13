@@ -183,4 +183,12 @@ public class EdgeManager {
             System.out.println(edge.getStart().getLabel() + " " + edge.getEnd().getLabel());
         }
     }
+
+    public void resetEdges(){
+        for(Edge edge : graphPanel.getEdges()){
+            edge.unselect();
+            edge.setWeight(0);
+        }
+        graphPanel.repaint();
+    }
 }

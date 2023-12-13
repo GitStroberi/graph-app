@@ -218,6 +218,11 @@ public class AlgorithmManager {
         System.out.println("The minimum spanning tree is: ");
         for (Edge e : minimumSpanningTree) {
             System.out.println(e.getStart().getLabel() + " " + e.getEnd().getLabel() + ":" + e.getWeight());
+            e.select();
+            Edge reverseEdge = graphPanel.getEdge(e.getEnd(), e.getStart());
+            if(reverseEdge != null){
+                reverseEdge.select();
+            }
         }
 
         return minimumSpanningTree;
@@ -258,6 +263,11 @@ public class AlgorithmManager {
         System.out.println("The minimum spanning tree is: ");
         for (Edge e : minimumSpanningTree) {
             System.out.println(e.getStart().getLabel() + " " + e.getEnd().getLabel() + ":" + e.getWeight());
+            e.select();
+            Edge reverseEdge = graphPanel.getEdge(e.getEnd(), e.getStart());
+            if(reverseEdge != null){
+                reverseEdge.select();
+            }
         }
 
         return minimumSpanningTree;
