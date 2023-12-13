@@ -490,6 +490,16 @@ public class GraphPanel extends JPanel{
         }
     }
 
+    // Helper method to find the index of the connected component containing a given node
+    private int findConnectedComponentIndex(ArrayList<ArrayList<Node>> connectedComponents, Node node) {
+        for (int i = 0; i < connectedComponents.size(); i++) {
+            if (connectedComponents.get(i).contains(node)) {
+                return i;
+            }
+        }
+        return -1; // Node not found in any connected component
+    }
+
     public void redrawAsSCCs(){
         ArrayList<ArrayList<Node>> connectedComponents = kosaraju();
 
@@ -499,24 +509,24 @@ public class GraphPanel extends JPanel{
         //the node is the newly created SCC, and the adjacent nodes are the nodes that represent other SCCs and are adjacent to the current SCC
         HashMap<Node, ArrayList<Node>> adjacencyListSCC = new HashMap<>();
 
-        //we need to iterate
-
-        //create the adjacency list for the SCCs
-        for(int i = 0; i < connectedComponents.size(); i++){
+        // Create the adjacency list for the SCCs
+        for (int i = 0; i < connectedComponents.size(); i++) {
             ArrayList<Node> adjacentNodes = new ArrayList<>();
-            for(int j = 0; j < connectedComponents.size(); j++){
-                if(i != j){
-                    //we need to check if there is an edge between the nodes in the two SCCs. stop when we find one
-                    for(Node n1 : connectedComponents.get(i)){
-                        for(Node n2 : connectedComponents.get(j)){
-                            if(adjacencyMatrix.getEdge(n1, n2) != null){
-                                adjacentNodes.add(newNodes.get(j));
-                                break;
-                            }
+
+            //iterate through all the edges that start from the nodes in the current SCC
+            for (Edge edge : getEdges()) {
+                if (connectedComponents.get(i).contains(edge.getStart())) {
+                    //if the end node of the edge is not in the current SCC, then it is adjacent to the current SCC
+                    if (!connectedComponents.get(i).contains(edge.getEnd())) {
+                        //if the adjacent node is not already in the list of adjacent nodes, then add it
+                        if (!adjacentNodes.contains(newNodes.get(findConnectedComponentIndex(connectedComponents, edge.getEnd())))) {
+                            adjacentNodes.add(newNodes.get(findConnectedComponentIndex(connectedComponents, edge.getEnd())));
                         }
                     }
                 }
             }
+
+            // Ensure that the map is initialized before putting a new entry
             adjacencyListSCC.put(newNodes.get(i), adjacentNodes);
         }
 
