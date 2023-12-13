@@ -62,11 +62,12 @@ public class KeyboardListener implements KeyListener {
         }
 
         if(key == KeyEvent.VK_W){
-            graphPanel.setEdgeWeights();
-            System.out.println("Prim's algorithm");
-            graphPanel.prim();
-            System.out.println("Kruskal's algorithm");
-            graphPanel.kruskal();
+            //graphPanel.setEdgeWeights();
+            //System.out.println("Prim's algorithm");
+            //graphPanel.prim();
+            //System.out.println("Kruskal's algorithm");
+            //graphPanel.kruskal();
+            graphPanel.getAdjacencyList().printAdjacencyList();
         }
     }
 

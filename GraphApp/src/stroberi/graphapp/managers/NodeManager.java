@@ -44,6 +44,9 @@ public class NodeManager {
         graphPanel.getAdjacencyMatrix().resizeMatrix(graphPanel.getBiggestLabel()+1);
         // graphPanel.getAdjacencyMatrix().printMatrix();
         graphPanel.getAdjacencyMatrix().saveMatrixToFile();
+
+        //add note to the adjacency list
+        graphPanel.getAdjacencyList().addNode(newNode);
     }
 
     public void removeNode(Node node) {
@@ -67,6 +70,8 @@ public class NodeManager {
         graphPanel.getAdjacencyMatrix().resizeMatrix(graphPanel.getBiggestLabel()+1);
         // graphPanel.getAdjacencyMatrix().printMatrix();
         graphPanel.getAdjacencyMatrix().saveMatrixToFile();
+        //remove node from the adjacency list
+        graphPanel.getAdjacencyList().removeNode(node);
     }
 
     public void removeAllNodes() {

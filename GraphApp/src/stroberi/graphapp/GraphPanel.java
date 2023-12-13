@@ -4,6 +4,7 @@ import stroberi.graphapp.listeners.KeyboardListener;
 import stroberi.graphapp.listeners.MouseListener;
 import stroberi.graphapp.managers.EdgeManager;
 import stroberi.graphapp.managers.NodeManager;
+import stroberi.graphapp.models.AdjacencyList;
 import stroberi.graphapp.models.AdjacencyMatrix;
 import stroberi.graphapp.models.Edge;
 import stroberi.graphapp.models.Node;
@@ -22,6 +23,8 @@ public class GraphPanel extends JPanel{
     private final ArrayList<Edge> edges;
     private final ArrayList<ArrayList<Node>> connectedComponents = new ArrayList<>();
     private final AdjacencyMatrix adjacencyMatrix;
+
+    private final AdjacencyList adjacencyList;
     private final ArrayList<Integer> availableLabels;
     private final ArrayList<Node> selectedNodes;
     private int biggestLabel;
@@ -45,6 +48,7 @@ public class GraphPanel extends JPanel{
         availableLabels = new ArrayList<>();
         selectedNodes = new ArrayList<>();
         adjacencyMatrix = new AdjacencyMatrix(this, prop.getProperty("matrixFilePath"));
+        adjacencyList = new AdjacencyList(this);
         biggestLabel = -1;
         nodeSize = Integer.parseInt(prop.getProperty("nodeSize"));
 
@@ -156,6 +160,10 @@ public class GraphPanel extends JPanel{
         return adjacencyMatrix;
     }
 
+    public AdjacencyList getAdjacencyList() {
+        return adjacencyList;
+    }
+
     public ArrayList<Node> getNodes() {
         return nodes;
     }
@@ -181,6 +189,7 @@ public class GraphPanel extends JPanel{
         }
         edges.add(edge);
         adjacencyMatrix.addEdgeToMatrix(edge);
+        adjacencyList.addAdjacentNode(edge.getStart(), edge.getEnd());
     }
 
     public Edge getEdge(Node start, Node end) {
@@ -196,6 +205,7 @@ public class GraphPanel extends JPanel{
     public void  removeEdge(Edge edge) {
         edges.remove(edge);
         adjacencyMatrix.removeEdgeFromMatrix(edge);
+        adjacencyList.removeAdjacentNode(edge.getStart(), edge.getEnd());
     }
 
     public int nodeSize() {
@@ -443,9 +453,9 @@ public class GraphPanel extends JPanel{
         return reverseEdges;
     }
 
-    private ArrayList<ArrayList<Node>> kosaraju(AdjacencyMatrix matrix){
+    private ArrayList<ArrayList<Node>> kosaraju(){
         Stack<Node> stack = new Stack<>();
-        boolean[] visited = new boolean[matrix.getSize()];
+        boolean[] visited = new boolean[biggestLabel + 1];
 
         for (Node node : nodes) {
             if (!visited[Integer.parseInt(node.getLabel())]) {
@@ -453,7 +463,7 @@ public class GraphPanel extends JPanel{
             }
         }
 
-        visited = new boolean[matrix.getSize()];
+        visited = new boolean[biggestLabel + 1];
         ArrayList<ArrayList<Node>> connectedComponents =  new ArrayList<>();
 
         while (!stack.isEmpty()) {
@@ -469,7 +479,7 @@ public class GraphPanel extends JPanel{
     }
 
     public void displaySCCs(){
-        ArrayList<ArrayList<Node>> connectedComponents = kosaraju(adjacencyMatrix);
+        ArrayList<ArrayList<Node>> connectedComponents = kosaraju();
         System.out.println("The strongly connected components are: ");
         for(ArrayList<Node> connectedComponent : connectedComponents){
             System.out.print("[");
@@ -481,7 +491,7 @@ public class GraphPanel extends JPanel{
     }
 
     public void redrawAsSCCs(){
-        ArrayList<ArrayList<Node>> connectedComponents = kosaraju(adjacencyMatrix);
+        ArrayList<ArrayList<Node>> connectedComponents = kosaraju();
 
         ArrayList<Node> newNodes = getSCCNodes(connectedComponents);
 
