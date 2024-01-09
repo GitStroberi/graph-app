@@ -8,10 +8,10 @@ public class Node {
     private int y;
     private int xOffset; // offset from mouse click to node center
     private int yOffset; // offset from mouse click to node center
-    private final int radius;
+    private int radius;
     private String label;
     private boolean selected = false;
-
+    private boolean showLabel = true;
     private Color nodeColor = Color.WHITE;
 
     public Node(int x, int y, int radius, String label) {
@@ -43,6 +43,11 @@ public class Node {
         return y;
     }
 
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
     public void calculateOffsets(int x, int y) {
         this.xOffset = x - this.x;
         this.yOffset = y - this.y;
@@ -61,6 +66,18 @@ public class Node {
         return yOffset;
     }
 
+    public void setShowLabel(boolean showLabel) {
+        this.showLabel = showLabel;
+    }
+
+    public boolean getShowLabel() {
+        return showLabel;
+    }
+
+    public void setRadius(int radius) {
+        //System.out.println("Node " + this.getLabel() + " radius changed from " + this.radius + " to " + radius);
+        this.radius = radius;
+    }
     public int getRadius() {
         return radius;
     }

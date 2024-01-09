@@ -3,4 +3,5 @@
 <properties>
     <entry key="nodeSize">50</entry>
     <entry key="matrixFilePath">src/resources/matrix.txt</entry>
+    <entry key="xmlFilePath">src/resources/map.xml</entry>
 </properties>

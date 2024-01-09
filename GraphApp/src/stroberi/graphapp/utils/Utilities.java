@@ -12,8 +12,12 @@ import java.util.Stack;
 
 public class Utilities {
     private final GraphPanel graphPanel;
+
+    int width, height;
     public Utilities(GraphPanel graphPanel){
         this.graphPanel = graphPanel;
+        this.width = graphPanel.getWidth();
+        this.height = graphPanel.getHeight();
     }
 
     public Color getRandomColor() {
@@ -227,4 +231,31 @@ public class Utilities {
         }
         graphPanel.repaint();
     }
+
+
+    public double lerp(double a, double b, double f) {
+        // Check if the interpolation factor is within the valid range
+        if (f < 0 || f > 1) {
+            throw new IllegalArgumentException("Interpolation factor (f) should be between 0 and 1.");
+        }
+        // Calculate the interpolated value
+        double interpolatedValue = (1.0 - f) * a + f * b;
+        System.out.println("Interpolated value: " + interpolatedValue + " for f = " + f + " and a = " + a + " and b = " + b + ".");
+        return interpolatedValue;
+    }
+
+    public int mapLongitudeToX(double longitude){
+        //the result is a value between 0 and width
+        double longitudeMin = graphPanel.getLongitudeMin();
+        double longitudeMax = graphPanel.getLongitudeMax();
+        return (int)lerp(0, width, (longitude - longitudeMin) / (longitudeMax - longitudeMin));
+    }
+
+    public int mapLatitudeToY(double latitude){
+        //the result is a value between 0 and height
+        double latitudeMin = graphPanel.getLatitudeMin();
+        double latitudeMax = graphPanel.getLatitudeMax();
+        return (int)lerp(0, height, (latitude - latitudeMin) / (latitudeMax - latitudeMin));
+    }
+
 }

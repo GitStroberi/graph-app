@@ -9,15 +9,21 @@ import stroberi.graphapp.models.AdjacencyList;
 import stroberi.graphapp.models.AdjacencyMatrix;
 import stroberi.graphapp.models.Edge;
 import stroberi.graphapp.models.Node;
-import stroberi.graphapp.utils.DisjointSet;
 import stroberi.graphapp.utils.Utilities;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.*;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
 
 public class GraphPanel extends JPanel{
     Properties prop = new Properties();
@@ -38,7 +44,19 @@ public class GraphPanel extends JPanel{
     private final Utilities utils;
     private final int nodeSize;
     private final Scanner scanner;
-    public GraphPanel() throws IOException {
+
+    private boolean mapMode = true;
+
+    private double longitudeMax = 0;
+    private double longitudeMin = Integer.MAX_VALUE;
+
+    private double latitudeMax = 0;
+    private double latitudeMin = Integer.MAX_VALUE;
+
+    int width, height;
+    public GraphPanel(int width, int height) throws IOException {
+        this.width = width;
+        this.height = height;
 
         String projectPath = System.getProperty("user.dir");
         try {
@@ -52,8 +70,8 @@ public class GraphPanel extends JPanel{
         edges = new ArrayList<>();
         availableLabels = new ArrayList<>();
         selectedNodes = new ArrayList<>();
-        adjacencyMatrix = new AdjacencyMatrix(this, prop.getProperty("matrixFilePath"));
-        adjacencyList = new AdjacencyList(this);
+        adjacencyMatrix = new AdjacencyMatrix(this, prop.getProperty("matrixFilePath"), mapMode);
+        adjacencyList = new AdjacencyList(this, mapMode);
         biggestLabel = -1;
         nodeSize = Integer.parseInt(prop.getProperty("nodeSize"));
 
@@ -71,6 +89,34 @@ public class GraphPanel extends JPanel{
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
         requestFocusInWindow();
+
+        loadNodesAndEdgesFromFile(prop.getProperty("xmlFilePath"));
+    }
+
+    @Override
+    public int getWidth() {
+        return width;
+    }
+
+    @Override
+    public int getHeight() {
+        return height;
+    }
+
+    public double getLongitudeMax() {
+        return longitudeMax;
+    }
+
+    public double getLongitudeMin() {
+        return longitudeMin;
+    }
+
+    public double getLatitudeMax() {
+        return latitudeMax;
+    }
+
+    public double getLatitudeMin() {
+        return latitudeMin;
     }
 
     @Override
@@ -85,7 +131,7 @@ public class GraphPanel extends JPanel{
             Node start = edge.getStart();
             Node end = edge.getEnd();
             if(edge.isSelected()){
-                g.setColor(Color.RED);
+                g.setColor(Color.YELLOW);
             }
             else {
                 g.setColor(Color.WHITE);
@@ -120,11 +166,93 @@ public class GraphPanel extends JPanel{
             g.drawOval(node.getX()-nodeSize/2, node.getY()-nodeSize/2, node.getRadius(), node.getRadius());
 
             String label = node.getLabel();
+            if(!node.getShowLabel())
+                continue;
             if(Integer.parseInt(label) < 10) {
                 g.drawString(label, node.getX()-4, node.getY()+5);
             } else {
                 g.drawString(label, node.getX()-9, node.getY()+5);
             }
+        }
+    }
+
+    public void loadNodesAndEdgesFromFile(String filePath) {
+        try {
+            File xmlFile = new File(filePath);
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(xmlFile);
+
+            doc.getDocumentElement().normalize();
+
+            // Load nodes
+            NodeList nodeList = doc.getElementsByTagName("node");
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Element nodeElement = (Element) nodeList.item(i);
+                int id = Integer.parseInt(nodeElement.getAttribute("id"));
+                double longitude = Double.parseDouble(nodeElement.getAttribute("longitude"));
+                double latitude = Double.parseDouble(nodeElement.getAttribute("latitude"));
+
+                //find the max and min longitude and latitude
+                if(longitude > longitudeMax){
+                    longitudeMax = longitude;
+                }
+                if(longitude < longitudeMin){
+                    longitudeMin = longitude;
+                }
+                if(latitude > latitudeMax){
+                    latitudeMax = latitude;
+                }
+                if(latitude < latitudeMin){
+                    latitudeMin = latitude;
+                }
+
+                //cast the double to an int
+                int x = (int)longitude;
+                int y = (int)latitude;
+
+                // Create Node object and add it to the list
+                Node node = new Node(x, y, 0, Integer.toString(id));
+                node.setShowLabel(false);
+                nodes.add(node);
+            }
+
+            //Print out the max and min longitude and latitude
+            System.out.println("Max longitude: " + longitudeMax);
+            System.out.println("Min longitude: " + longitudeMin);
+
+            //Reposition the nodes based on the map
+            for(Node n : nodes){
+                n.setPosition(utils.mapLongitudeToX(n.getX()), utils.mapLatitudeToY(n.getY()));
+            }
+
+            // Load edges (arcs)
+            NodeList arcList = doc.getElementsByTagName("arc");
+            for (int i = 0; i < arcList.getLength(); i++) {
+                Element arcElement = (Element) arcList.item(i);
+                int fromNodeId = Integer.parseInt(arcElement.getAttribute("from"));
+                int toNodeId = Integer.parseInt(arcElement.getAttribute("to"));
+
+                //cast the int to a string
+                String fromNodeIdString = Integer.toString(fromNodeId);
+                String toNodeIdString = Integer.toString(toNodeId);
+
+                // Get Node objects based on IDs
+                Node startNode = nodeManager.getNodeByLabel(fromNodeIdString);
+                Node endNode = nodeManager.getNodeByLabel(toNodeIdString);
+
+                if (startNode != null && endNode != null) {
+                    // Create Edge object and add it to the list
+                    Edge edge = new Edge(startNode, endNode);
+                    edges.add(edge);
+                }
+            }
+
+            // Repaint the panel after loading nodes and edges
+            repaint();
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle exceptions as needed
         }
     }
 

@@ -10,16 +10,21 @@ import java.util.List;
 
 public class AdjacencyMatrix {
     private final List<List<Integer>> matrix = new ArrayList<>();
-
     private final GraphPanel graphPanel;
     private final String filePath;
 
-    public AdjacencyMatrix(GraphPanel graphPanel, String filePath) {
+    private boolean mapMode;
+
+    public AdjacencyMatrix(GraphPanel graphPanel, String filePath, boolean mapMode) {
         this.graphPanel = graphPanel;
         this.filePath = filePath;
+        this.mapMode = mapMode;
     }
 
     public void resizeMatrix(int newSize) {
+        if (mapMode) {
+            return;
+        }
         // Resize the matrix based on the new size
         int currentSize = matrix.size();
         if (newSize < currentSize) {
@@ -53,6 +58,10 @@ public class AdjacencyMatrix {
         //int biggestLabel = graphPanel.getBiggestLabel();
         //resizeMatrix(biggestLabel + 1);
 
+        if (mapMode) {
+            return;
+        }
+
         int start = Integer.parseInt(edge.getStart().getLabel());
         int end = Integer.parseInt(edge.getEnd().getLabel());
 
@@ -69,6 +78,11 @@ public class AdjacencyMatrix {
     public void addEdgeToMatrix(Edge edge) {
         //int biggestLabel = graphPanel.getBiggestLabel();
         //resizeMatrix(biggestLabel + 1);
+
+        if (mapMode) {
+            return;
+        }
+
         int start = Integer.parseInt(edge.getStart().getLabel());
         int end = Integer.parseInt(edge.getEnd().getLabel());
 
@@ -91,6 +105,11 @@ public class AdjacencyMatrix {
     }
 
     public void saveMatrixToFile() {
+
+        if (mapMode) {
+            return;
+        }
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (List<Integer> row : matrix) {
                 for (Integer element : row) {
