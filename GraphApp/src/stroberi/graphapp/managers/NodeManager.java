@@ -15,7 +15,8 @@ public class NodeManager {
     }
 
     public Node getNodeAt(int x, int y) {
-        for(Node node : graphPanel.getNodes()) {
+        ArrayList<Node> nodes = graphPanel.getNodes();
+        for(Node node : nodes) {
             if(isClickOnNode(x, y, node)) {
                 return node;
             }
@@ -53,12 +54,13 @@ public class NodeManager {
         graphPanel.removeNode(node);
         graphPanel.getSelectedNodes().remove(node);
         graphPanel.addAvailableLabel(Integer.parseInt(node.getLabel()));
+        ArrayList<Node> nodes = graphPanel.getNodes();
 
         //check if the removed label is the biggest label
         if(Integer.parseInt(node.getLabel()) == graphPanel.getBiggestLabel()){
             //find the new biggest label
             int biggestLabel = -1;
-            for(Node n : graphPanel.getNodes()){
+            for(Node n : nodes){
                 if(Integer.parseInt(n.getLabel()) > biggestLabel){
                     biggestLabel = Integer.parseInt(n.getLabel());
                 }
@@ -76,7 +78,8 @@ public class NodeManager {
 
     public void removeAllNodes() {
         ArrayList<Node> nodesToRemove = new ArrayList<>();
-        for(Node node : graphPanel.getNodes()){
+        ArrayList<Node> nodes = graphPanel.getNodes();
+        for(Node node : nodes){
             nodesToRemove.add(node);
         }
 
@@ -119,10 +122,11 @@ public class NodeManager {
     }
 
     public boolean isNodeNearby(int x, int y) {
+        ArrayList<Node> nodes = graphPanel.getNodes();
         int radius;
         int centerX;
         int centerY;
-        for(Node node : graphPanel.getNodes()) {
+        for(Node node : nodes) {
             radius = node.getRadius();
             centerX = node.getX();
             centerY = node.getY();
@@ -136,17 +140,24 @@ public class NodeManager {
     }
 
     public Node getNodeByLabel(String label){
-        for(Node node : graphPanel.getNodes()){
+        ArrayList<Node> nodes = graphPanel.getNodes();
+        for(Node node : nodes){
             if(node.getLabel().equals(label)){
                 return node;
             }
         }
         return null;
     }
+
+    public Node getNodeByIndex(int index, ArrayList<Node> nodes){
+        return nodes.get(index);
+    }
+
     public void generateRandomNodes(int count){
         //clear the current nodes
         ArrayList<Node> nodesToRemove = new ArrayList<>();
-        for(Node node : graphPanel.getNodes()){
+        ArrayList<Node> nodes = graphPanel.getNodes();
+        for(Node node : nodes){
             nodesToRemove.add(node);
         }
         for(Node node : nodesToRemove){
@@ -154,13 +165,16 @@ public class NodeManager {
             removeNode(node);
         }
 
+        int width = graphPanel.getWidth();
+        int height = graphPanel.getHeight();
+        int nodeSize = graphPanel.nodeSize();
         //generate new nodes at random positions. if the node is overlapping, generate a new position
         for(int i = 0; i < count; i++){
-            int x = (int)(Math.random() * (graphPanel.getWidth() - graphPanel.nodeSize())) + graphPanel.nodeSize()/2;
-            int y = (int)(Math.random() * (graphPanel.getHeight() - graphPanel.nodeSize())) + graphPanel.nodeSize()/2;
+            int x = (int)(Math.random() * (width - nodeSize)) + nodeSize/2;
+            int y = (int)(Math.random() * (height - nodeSize)) + nodeSize/2;
             while(isNodeNearby(x, y)){
-                x = (int)(Math.random() * (graphPanel.getWidth() - graphPanel.nodeSize())) + graphPanel.nodeSize()/2;
-                y = (int)(Math.random() * (graphPanel.getHeight() - graphPanel.nodeSize())) + graphPanel.nodeSize()/2;
+                x = (int)(Math.random() * (width - nodeSize)) + nodeSize/2;
+                y = (int)(Math.random() * (width - nodeSize)) + nodeSize/2;
             }
             createNode(x, y);
         }

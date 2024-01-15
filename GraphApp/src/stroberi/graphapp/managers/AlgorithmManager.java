@@ -60,7 +60,8 @@ public class AlgorithmManager {
             if(current.getColor() == Color.WHITE){
                 current.setColor(Color.GRAY);
                 connectedComponent.add(current);
-                for(Node neighbor : graphPanel.getUtils().getNeighbours(current, graphPanel.getEdges())){
+                ArrayList<Node> neighbours = graphPanel.getUtils().getNeighbours(current, graphPanel.getEdges());
+                for(Node neighbor : neighbours){
                     stack.push(neighbor);
                 }
             }
@@ -91,7 +92,8 @@ public class AlgorithmManager {
         //the topological sort can be done by using the fillOrder function and then reversing the stack
         Stack<Node> stack = new Stack<>();
         boolean[] visited = new boolean[graphPanel.getBiggestLabel() + 1];
-        for(Node n : graphPanel.getNodes()){
+        ArrayList<Node> nodes = graphPanel.getNodes();
+        for(Node n : nodes){
             if(!visited[Integer.parseInt(n.getLabel())]){
                 graphPanel.getUtils().fillOrder(n, visited, stack);
             }
@@ -105,8 +107,8 @@ public class AlgorithmManager {
     public ArrayList<ArrayList<Node>> kosaraju(){
         Stack<Node> stack = new Stack<>();
         boolean[] visited = new boolean[graphPanel.getBiggestLabel() + 1];
-
-        for (Node node : graphPanel.getNodes()) {
+        ArrayList<Node> nodes = graphPanel.getNodes();
+        for (Node node : nodes) {
             if (!visited[Integer.parseInt(node.getLabel())]) {
                 graphPanel.getUtils().fillOrder(node, visited, stack);
             }
@@ -119,7 +121,8 @@ public class AlgorithmManager {
             Node currentNode = stack.pop();
             if (!visited[Integer.parseInt(currentNode.getLabel())]) {
                 ArrayList<Node> connectedComponent = new ArrayList<>();
-                dfsDirected(currentNode, graphPanel.getReverseEdges(), connectedComponent, visited);
+                ArrayList<Edge> reverseEdges = graphPanel.getReverseEdges();
+                dfsDirected(currentNode, reverseEdges, connectedComponent, visited);
                 connectedComponents.add(connectedComponent);
             }
         }
@@ -128,7 +131,9 @@ public class AlgorithmManager {
     }
 
     public Node findRoot() {
-        for(Node n : graphPanel.getNodes()){
+        ArrayList<Node> nodes = graphPanel.getNodes();
+        ArrayList<Edge> edges = graphPanel.getEdges();
+        for(Node n : nodes){
             n.setColor(Color.WHITE);
         }
         graphPanel.repaint();
@@ -146,9 +151,9 @@ public class AlgorithmManager {
         Node potentialRoot = null;
 
         // Count nodes with in-degree 0 and store them in potentialRoot
-        for (Node node : graphPanel.getNodes()) {
+        for (Node node : nodes) {
             int inDegree = 0;
-            for (Edge edge : graphPanel.getEdges()) {
+            for (Edge edge : edges) {
                 if (edge.getEnd() == node) {
                     inDegree++;
                 }
@@ -163,7 +168,7 @@ public class AlgorithmManager {
         if (inDegreeZeroCount == 1) {
             System.out.println("The graph is an arborescence, and the root is: " + potentialRoot.getLabel());
             //color the root node green and the rest of the nodes white
-            for(Node n : graphPanel.getNodes()){
+            for(Node n : nodes){
                 if(n.isEqual(potentialRoot)){
                     n.setColor(Color.GREEN);
                 } else {
@@ -179,12 +184,14 @@ public class AlgorithmManager {
     }
 
     public ArrayList<Edge> runPrim() {
+        ArrayList<Node> nodes = graphPanel.getNodes();
+        ArrayList<Edge> edges = graphPanel.getEdges();
         if (!graphPanel.getIsUndirected()) {
             System.out.println("The graph must be undirected for Prim's algorithm.");
             return null;
         }
 
-        Node root = graphPanel.getNodes().get(0);
+        Node root = nodes.get(0);
         PriorityQueue<Edge> priorityQueue = new PriorityQueue<>(new Comparator<Edge>() {
             @Override
             public int compare(Edge edge1, Edge edge2) {
@@ -195,7 +202,7 @@ public class AlgorithmManager {
         ArrayList<Edge> minimumSpanningTree = new ArrayList<>();
 
         visited.add(root);
-        for (Edge e : graphPanel.getEdges()) {
+        for (Edge e : edges) {
             if (e.getStart() == root) {
                 priorityQueue.add(e);
             }
@@ -207,7 +214,7 @@ public class AlgorithmManager {
             if (!visited.contains(currentNode)) {
                 minimumSpanningTree.add(currentEdge);
                 visited.add(currentNode);
-                for (Edge e : graphPanel.getEdges()) {
+                for (Edge e : edges) {
                     if (e.getStart() == currentNode) {
                         priorityQueue.add(e);
                     }
@@ -230,6 +237,7 @@ public class AlgorithmManager {
 
     // Kruskal's algorithm
     public ArrayList<Edge> runKruskal() {
+        ArrayList<Edge> edges = graphPanel.getEdges();
         if (!graphPanel.getIsUndirected()) {
             System.out.println("The graph must be undirected for Kruskal's algorithm.");
             return null;
@@ -243,7 +251,7 @@ public class AlgorithmManager {
             }
         });
 
-        for (Edge e : graphPanel.getEdges()) {
+        for (Edge e : edges) {
             priorityQueue.add(e);
         }
 

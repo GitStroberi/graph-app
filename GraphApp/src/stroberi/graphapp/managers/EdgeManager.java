@@ -89,7 +89,8 @@ public class EdgeManager {
     public void createUndirectedEdges() {
         // new edge array
         ArrayList<Edge> newEdges = new ArrayList<>();
-        for(Edge edge : graphPanel.getEdges()) {
+        ArrayList<Edge> edges = graphPanel.getEdges();
+        for(Edge edge : edges) {
             Edge edge2 = new Edge(edge.getEnd(), edge.getStart());
             //add the edge to the new edge array only if it doesn't already exist
             if(!newEdges.contains(edge2)) {
@@ -103,9 +104,10 @@ public class EdgeManager {
     }
 
     public void createCompleteGraph(){
+        ArrayList<Node> nodes = graphPanel.getNodes();
         ArrayList<Edge> newEdges = new ArrayList<>();
-        for(Node node1 : graphPanel.getNodes()){
-            for(Node node2 : graphPanel.getNodes()){
+        for(Node node1 : nodes){
+            for(Node node2 : nodes){
                 if(node1 != node2){
                     Edge edge = new Edge(node1, node2);
                     if(!newEdges.contains(edge)){
@@ -123,12 +125,12 @@ public class EdgeManager {
 
     public void createPartialGraph(int chanceOfEdge){
         ArrayList<Edge> newEdges = new ArrayList<>();
-
+        ArrayList<Node> nodes = graphPanel.getNodes();
         //in case the graph is undirected, to avoid giving the same edge two chances,
         //after we are finished with a node, we remove it from the list so that it won't be checked again
-        ArrayList<Node> tempNodes = new ArrayList<>(graphPanel.getNodes());
+        ArrayList<Node> tempNodes = new ArrayList<>(nodes);
         if(graphPanel.getIsUndirected()){
-            for(Node node1 : graphPanel.getNodes()){
+            for(Node node1 : nodes){
                 for(Node node2 : tempNodes){
                     if(node1 != node2){
                         int random = (int)(Math.random() * 100);
@@ -144,8 +146,8 @@ public class EdgeManager {
             }
         }
         else{
-            for(Node node1 : graphPanel.getNodes()){
-                for(Node node2 : graphPanel.getNodes()){
+            for(Node node1 : nodes){
+                for(Node node2 : nodes){
                     if(node1 != node2){
                         int random = (int)(Math.random() * 100);
                         if(random < chanceOfEdge){

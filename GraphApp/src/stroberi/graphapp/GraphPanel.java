@@ -26,38 +26,30 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 
 public class GraphPanel extends JPanel{
+    private final boolean mapMode = true;
     Properties prop = new Properties();
     private final ArrayList<Node> nodes;
     private final ArrayList<Edge> edges;
     private final ArrayList<ArrayList<Node>> connectedComponents = new ArrayList<>();
-    private final AdjacencyMatrix adjacencyMatrix;
+    private AdjacencyMatrix adjacencyMatrix = null;
     private final AdjacencyList adjacencyList;
     private final ArrayList<Integer> availableLabels;
     private final ArrayList<Node> selectedNodes;
     private int biggestLabel;
     private boolean isDirected = false;
-    private final NodeManager nodeManager;
-    private final EdgeManager edgeManager;
-
+    private NodeManager nodeManager = null;
+    private EdgeManager edgeManager = null;
     private final AlgorithmManager algorithmManager;
-
     private final Utilities utils;
     private final int nodeSize;
     private final Scanner scanner;
-
-    private boolean mapMode = true;
-
     private double longitudeMax = 0;
     private double longitudeMin = Integer.MAX_VALUE;
 
     private double latitudeMax = 0;
     private double latitudeMin = Integer.MAX_VALUE;
-
     int width, height;
     public GraphPanel(int width, int height) throws IOException {
-        this.width = width;
-        this.height = height;
-
         String projectPath = System.getProperty("user.dir");
         try {
             prop.loadFromXML(new FileInputStream(projectPath + "/src/resources/config.xml"));
@@ -65,34 +57,47 @@ public class GraphPanel extends JPanel{
             e.printStackTrace();
         }
 
+        this.width = width;
+        this.height = height;
+
         scanner = new Scanner(System.in);
         nodes = new ArrayList<>();
         edges = new ArrayList<>();
         availableLabels = new ArrayList<>();
         selectedNodes = new ArrayList<>();
-        adjacencyMatrix = new AdjacencyMatrix(this, prop.getProperty("matrixFilePath"), mapMode);
+
         adjacencyList = new AdjacencyList(this, mapMode);
         biggestLabel = -1;
         nodeSize = Integer.parseInt(prop.getProperty("nodeSize"));
 
-        this.nodeManager = new NodeManager(this);
-        this.edgeManager = new EdgeManager(this);
         this.algorithmManager = new AlgorithmManager(this);
         this.utils = new Utilities(this);
+        this.nodeManager = new NodeManager(this);
+        this.edgeManager = new EdgeManager(this);
+
+        if(mapMode){
+            System.out.println("Map mode is on");
+            loadNodesAndEdgesFromFile(prop.getProperty("xmlFilePath"));
+        }
+        else{
+            System.out.println("Map mode is off");
+            adjacencyMatrix = new AdjacencyMatrix(this, prop.getProperty("matrixFilePath"));
+            KeyboardListener keyboardListener = new KeyboardListener(this);
+            addKeyListener(keyboardListener);
+        }
 
         MouseListener mouseListener = new MouseListener(this);
         addMouseListener(mouseListener);
         addMouseMotionListener(mouseListener);
 
-        KeyboardListener keyboardListener = new KeyboardListener(this);
-        addKeyListener(keyboardListener);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
         requestFocusInWindow();
-
-        loadNodesAndEdgesFromFile(prop.getProperty("xmlFilePath"));
     }
 
+    public boolean getMapMode(){
+        return mapMode;
+    }
     @Override
     public int getWidth() {
         return width;
@@ -187,7 +192,8 @@ public class GraphPanel extends JPanel{
 
             // Load nodes
             NodeList nodeList = doc.getElementsByTagName("node");
-            for (int i = 0; i < nodeList.getLength(); i++) {
+            int nodeCount = nodeList.getLength();
+            for (int i = 0; i < nodeCount; i++) {
                 Element nodeElement = (Element) nodeList.item(i);
                 int id = Integer.parseInt(nodeElement.getAttribute("id"));
                 double longitude = Double.parseDouble(nodeElement.getAttribute("longitude"));
@@ -228,18 +234,15 @@ public class GraphPanel extends JPanel{
 
             // Load edges (arcs)
             NodeList arcList = doc.getElementsByTagName("arc");
-            for (int i = 0; i < arcList.getLength(); i++) {
+            int arcCount = arcList.getLength();
+            for (int i = 0; i < arcCount; i++) {
                 Element arcElement = (Element) arcList.item(i);
                 int fromNodeId = Integer.parseInt(arcElement.getAttribute("from"));
                 int toNodeId = Integer.parseInt(arcElement.getAttribute("to"));
 
-                //cast the int to a string
-                String fromNodeIdString = Integer.toString(fromNodeId);
-                String toNodeIdString = Integer.toString(toNodeId);
-
                 // Get Node objects based on IDs
-                Node startNode = nodeManager.getNodeByLabel(fromNodeIdString);
-                Node endNode = nodeManager.getNodeByLabel(toNodeIdString);
+                Node startNode = nodeManager.getNodeByIndex(fromNodeId, nodes);
+                Node endNode = nodeManager.getNodeByIndex(toNodeId, nodes);
 
                 if (startNode != null && endNode != null) {
                     // Create Edge object and add it to the list
