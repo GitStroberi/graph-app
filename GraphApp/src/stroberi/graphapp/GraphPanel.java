@@ -48,6 +48,8 @@ public class GraphPanel extends JPanel{
 
     private double latitudeMax = 0;
     private double latitudeMin = Integer.MAX_VALUE;
+
+    private HashMap<String, Edge> edgeMap;
     int width, height;
     public GraphPanel(int width, int height) throws IOException {
         String projectPath = System.getProperty("user.dir");
@@ -59,6 +61,7 @@ public class GraphPanel extends JPanel{
 
         this.width = width;
         this.height = height;
+        this.edgeMap = new HashMap<>();
 
         scanner = new Scanner(System.in);
         nodes = new ArrayList<>();
@@ -131,12 +134,23 @@ public class GraphPanel extends JPanel{
         super.setBackground(Color.DARK_GRAY);
         g.setFont(new Font("TimesRoman", Font.PLAIN, 16));
 
+        if(mapMode){
+            drawNodes(g);
+            drawEdges(g);
+        }
+        else{
+            drawEdges(g);
+            drawNodes(g);
+        }
+    }
+
+    public void drawEdges(Graphics g){
         // Draw the edges first so that the nodes will be on top of the edges
         for (Edge edge : edges) {
             Node start = edge.getStart();
             Node end = edge.getEnd();
             if(edge.isSelected()){
-                g.setColor(Color.YELLOW);
+                g.setColor(Color.RED);
             }
             else {
                 g.setColor(Color.WHITE);
@@ -155,7 +169,9 @@ public class GraphPanel extends JPanel{
                 drawEdgeWeight(g, edge, start.getX(), start.getY(), end.getX(), end.getY());
             }
         }
+    }
 
+    public void drawNodes(Graphics g){
         // Draw the nodes
         for (Node node : nodes) {
             g.setColor(node.getColor());
@@ -179,6 +195,10 @@ public class GraphPanel extends JPanel{
                 g.drawString(label, node.getX()-9, node.getY()+5);
             }
         }
+    }
+
+    public HashMap<String, Edge> getEdgeMap() {
+        return edgeMap;
     }
 
     public void loadNodesAndEdgesFromFile(String filePath) {
@@ -221,6 +241,9 @@ public class GraphPanel extends JPanel{
                 Node node = new Node(x, y, 0, Integer.toString(id));
                 node.setShowLabel(false);
                 nodes.add(node);
+
+                //add the node to the adjacency list
+                adjacencyList.addNode(node);
             }
 
             //Print out the max and min longitude and latitude
@@ -239,6 +262,7 @@ public class GraphPanel extends JPanel{
                 Element arcElement = (Element) arcList.item(i);
                 int fromNodeId = Integer.parseInt(arcElement.getAttribute("from"));
                 int toNodeId = Integer.parseInt(arcElement.getAttribute("to"));
+                int length = Integer.parseInt(arcElement.getAttribute("length"));
 
                 // Get Node objects based on IDs
                 Node startNode = nodeManager.getNodeByIndex(fromNodeId, nodes);
@@ -247,6 +271,11 @@ public class GraphPanel extends JPanel{
                 if (startNode != null && endNode != null) {
                     // Create Edge object and add it to the list
                     Edge edge = new Edge(startNode, endNode);
+                    //add the edge to the edge map
+                    edgeMap.put(startNode.getLabel() + "-" + endNode.getLabel(), edge);
+                    //add the nodes to the adjacency list
+                    adjacencyList.addAdjacentNode(startNode, endNode);
+                    edge.setWeight(length);
                     edges.add(edge);
                 }
             }
@@ -288,7 +317,7 @@ public class GraphPanel extends JPanel{
 
     public void drawEdgeWeight(Graphics g, Edge edge, int x1, int y1, int x2, int y2) {
         //if edge weight is 0, don't draw it
-        if(edge.getWeight() == 0){
+        if(edge.getWeight() == 0 || mapMode){
             return;
         }
         int weight = edge.getWeight();

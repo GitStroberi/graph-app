@@ -29,11 +29,9 @@ public class Edge {
     public void select() {
         selected = true;
     }
-
     public void unselect() {
         selected = false;
     }
-
     public boolean isSelected() {
         return selected;
     }

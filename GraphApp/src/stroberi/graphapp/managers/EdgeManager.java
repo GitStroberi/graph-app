@@ -5,6 +5,7 @@ import stroberi.graphapp.GraphPanel;
 import stroberi.graphapp.models.Node;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class EdgeManager {
     final private GraphPanel graphPanel;
@@ -31,6 +32,27 @@ public class EdgeManager {
         selectedNodes.get(0).unselect();
         selectedNodes.get(1).unselect();
         selectedNodes.clear();
+    }
+
+    public Edge getEdge(Node start, Node end, ArrayList<Edge> edges) {
+        for (Edge edge : edges) {
+            if (edge.getStart() == start && edge.getEnd() == end) {
+                return edge;
+            }
+        }
+        return null;
+    }
+
+    public Edge getEdge(Node start, Node end, HashMap<String, Edge> edgeMap) {
+        String edgeKey = start.getLabel() + "-" + end.getLabel(); // Assuming Node has an 'getId()' method
+
+        // Check if the edge exists in the map
+        if (edgeMap.containsKey(edgeKey)) {
+            return edgeMap.get(edgeKey);
+        }
+
+        // Edge not found
+        return null;
     }
 
     public void removeEdge(Edge edge){
@@ -83,6 +105,12 @@ public class EdgeManager {
             else {
                 createEdge();
             }
+        }
+    }
+
+    public void toggleRunDjikstra() {
+        if(selectedNodes.size() == 2) {
+            graphPanel.getAlgorithmManager().runDjikstra(selectedNodes.get(0), selectedNodes.get(1));
         }
     }
 

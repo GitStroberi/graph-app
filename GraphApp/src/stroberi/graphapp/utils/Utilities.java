@@ -240,7 +240,6 @@ public class Utilities {
         }
         // Calculate the interpolated value
         double interpolatedValue = (1.0 - f) * a + f * b;
-        System.out.println("Interpolated value: " + interpolatedValue + " for f = " + f + " and a = " + a + " and b = " + b + ".");
         return interpolatedValue;
     }
 

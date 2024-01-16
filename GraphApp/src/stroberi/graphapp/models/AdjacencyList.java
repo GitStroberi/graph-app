@@ -18,9 +18,6 @@ public class AdjacencyList {
     }
 
     public void createAdjacencyList(){
-        if (mapMode) {
-            return;
-        }
         for(Node node : graphPanel.getNodes()){
             ArrayList<Node> neighbours = new ArrayList<>();
             for(Edge edge : graphPanel.getEdges()){
@@ -33,31 +30,19 @@ public class AdjacencyList {
     }
 
     public void addNode(Node node){
-        if (mapMode) {
-            return;
-        }
         ArrayList<Node> neighbours = new ArrayList<>();
         adjacencyList.put(node, neighbours);
     }
 
     public void removeNode(Node node){
-        if (mapMode) {
-            return;
-        }
         adjacencyList.remove(node);
     }
 
     public void addAdjacentNode(Node node, Node neighbour){
-        if (mapMode) {
-            return;
-        }
         adjacencyList.get(node).add(neighbour);
     }
 
     public void removeAdjacentNode(Node node, Node neighbour){
-        if (mapMode) {
-            return;
-        }
         adjacencyList.get(node).remove(neighbour);
     }
 

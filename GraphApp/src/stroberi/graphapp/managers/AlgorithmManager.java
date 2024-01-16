@@ -280,4 +280,107 @@ public class AlgorithmManager {
 
         return minimumSpanningTree;
     }
+
+    // Dijkstra's algorithm
+    // If an edge is part of the shortest path, we call edge.select()
+    public void runDjikstra(Node start, Node end){
+        ArrayList<Node> nodes = graphPanel.getNodes();
+        ArrayList<Edge> edges = graphPanel.getEdges();
+
+        System.out.printf("Running Dijkstra's algorithm from %s to %s\n", start.getLabel(), end.getLabel());
+
+        if (start == null || end == null) {
+            System.out.println("The start and end nodes must be selected for Dijkstra's algorithm.");
+            return;
+        }
+
+        if (start == end) {
+            System.out.println("The start and end nodes must be different for Dijkstra's algorithm.");
+            return;
+        }
+
+        // Initialize distances to infinity
+        HashMap<Node, Integer> distances = new HashMap<>();
+        HashMap<String, Edge> edgeMap = graphPanel.getEdgeMap();
+        for (Node node : nodes) {
+            distances.put(node, Integer.MAX_VALUE);
+        }
+
+        // Initialize the distance of the start node to 0
+        distances.put(start, 0);
+
+        // Initialize the previous node of each node to null
+        HashMap<Node, Node> previous = new HashMap<>();
+        for (Node node : nodes) {
+            previous.put(node, null);
+        }
+
+        // Initialize the priority queue
+        PriorityQueue<Node> priorityQueue = new PriorityQueue<>(new Comparator<Node>() {
+            @Override
+            public int compare(Node node1, Node node2) {
+                return distances.get(node1) - distances.get(node2);
+            }
+        });
+
+        // Add all nodes to the priority queue
+        for (Node node : nodes) {
+            priorityQueue.add(node);
+        }
+
+        // While the priority queue is not empty
+        while (!priorityQueue.isEmpty()) {
+            // Get the node with the smallest distance
+            Node currentNode = priorityQueue.poll();
+
+            // If the distance of the current node is infinity, then the rest of the nodes are unreachable
+            if (distances.get(currentNode) == Integer.MAX_VALUE) {
+                break;
+            }
+
+            // Get the neighbors of the current node
+            ArrayList<Node> neighbors = graphPanel.getAdjacencyList().getNeighbours(currentNode);
+
+            // For each neighbor of the current node
+            for (Node neighbor : neighbors) {
+                // Calculate the distance from the start node to the neighbor
+                int distance = distances.get(currentNode) + graphPanel.getEdgeManager().getEdge(currentNode, neighbor, edgeMap).getWeight();
+
+                // If the calculated distance is less than the current distance to the neighbor
+                if (distance < distances.get(neighbor)) {
+                    // Update the distance to the neighbor
+                    distances.put(neighbor, distance);
+
+                    // Update the previous node for the neighbor
+                    previous.put(neighbor, currentNode);
+
+                    // Update the priority queue with the new distance
+                    priorityQueue.remove(neighbor);
+                    priorityQueue.add(neighbor);
+                }
+            }
+        }
+
+        // Reconstruct the shortest path from start to end while selecting the edges
+        ArrayList<Node> shortestPath = new ArrayList<>();
+        Node currentNode = end;
+        while (currentNode != null) {
+            shortestPath.add(currentNode);
+
+            // Get the previous node
+            Node previousNode = previous.get(currentNode);
+
+            // If there is a previous node, select the edge between current and previous nodes
+            if (previousNode != null) {
+                Edge edge = graphPanel.getEdgeManager().getEdge(previousNode, currentNode, edgeMap);
+                edge.select();
+            }
+
+            currentNode = previousNode;
+        }
+        Collections.reverse(shortestPath);
+
+        // Print the shortest path and total distance
+        System.out.println("Total Distance: " + distances.get(end));
+    }
 }

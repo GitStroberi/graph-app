@@ -24,6 +24,20 @@ public class NodeManager {
         return null;
     }
 
+    public Node getClosestNode(int x, int y){
+        ArrayList<Node> nodes = graphPanel.getNodes();
+        Node closestNode = nodes.get(0);
+        double closestDistance = Math.sqrt(Math.pow(closestNode.getX() - x, 2) + Math.pow(closestNode.getY() - y, 2));
+        for(Node node : nodes){
+            double distance = Math.sqrt(Math.pow(node.getX() - x, 2) + Math.pow(node.getY() - y, 2));
+            if(distance < closestDistance){
+                closestNode = node;
+                closestDistance = distance;
+            }
+        }
+        return closestNode;
+    }
+
     public void createNode(int x, int y) {
         int label;
         if(graphPanel.getAvailableLabels().isEmpty()){

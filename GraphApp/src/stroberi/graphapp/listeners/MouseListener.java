@@ -30,34 +30,59 @@ public class MouseListener extends MouseAdapter{
 
         //System.out.println(graphPanel.getAvailableLabels());
         // Get the node at the clicked position
-        selectedNode = nodeManager.getNodeAt(x, y);
 
-        if (SwingUtilities.isLeftMouseButton(e)) {
-            // If there is no node at the clicked position, create a new node
-            if(selectedNode == null) {
-                //check if the click would create a node overlapping another node
-                if(nodeManager.isNodeNearby(x, y)) {
-                    // System.out.println("Node would overlap another node");
-                    return;
+        if (!graphPanel.getMapMode()){
+            selectedNode = nodeManager.getNodeAt(x, y);
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                // If there is no node at the clicked position, create a new node
+                if(selectedNode == null) {
+                    //check if the click would create a node overlapping another node
+                    if(nodeManager.isNodeNearby(x, y)) {
+                        // System.out.println("Node would overlap another node");
+                        return;
+                    }
+                    nodeManager.createNode(x, y);
                 }
-                nodeManager.createNode(x, y);
-            }
-            else {
-                // If there is a node at the clicked position, toggle its selection
-                nodeManager.toggleNodeSelection(selectedNode);
+                else {
+                    // If there is a node at the clicked position, toggle its selection
+                    nodeManager.toggleNodeSelection(selectedNode);
 
-                // If there are two nodes selected, toggle the edge between them
-                edgeManager.toggleEdge();
-            }
+                    // If there are two nodes selected, toggle the edge between them
+                    edgeManager.toggleEdge();
+                }
 
-            // Repaint the panel
-            graphPanel.repaint();
+                // Repaint the panel
+                graphPanel.repaint();
+            }
+            else if(SwingUtilities.isRightMouseButton(e)) {
+                // If there is a node at the clicked position, remove it
+                if (selectedNode != null) {
+                    edgeManager.removeEdges(selectedNode);
+                    nodeManager.removeNode(selectedNode);
+                    graphPanel.repaint();
+                }
+            }
         }
-        else if(SwingUtilities.isRightMouseButton(e)) {
-            // If there is a node at the clicked position, remove it
-            if (selectedNode != null) {
-                edgeManager.removeEdges(selectedNode);
-                nodeManager.removeNode(selectedNode);
+        else {
+            selectedNode = nodeManager.getClosestNode(x, y);
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                // If there is no node at the clicked position, create a new node
+                if(selectedNode == null) {
+                    //check if the click would create a node overlapping another node
+                    if(nodeManager.isNodeNearby(x, y)) {
+                        // System.out.println("Node would overlap another node");
+                        return;
+                    }
+                }
+                else {
+                    // If there is a node at the clicked position, toggle its selection
+                    nodeManager.toggleNodeSelection(selectedNode);
+
+                    // If there are two nodes selected, toggle the edge between them
+                    edgeManager.toggleRunDjikstra();
+                }
+
+                // Repaint the panel
                 graphPanel.repaint();
             }
         }
