@@ -142,6 +142,28 @@ public class GraphPanel extends JPanel{
             drawEdges(g);
             drawNodes(g);
         }
+
+        //redraw only the selected edges
+        for(Edge edge : edges){
+            if(edge.isSelected()){
+                Node start = edge.getStart();
+                Node end = edge.getEnd();
+                g.setColor(Color.RED);
+                g.drawLine(start.getX(), start.getY(), end.getX(), end.getY());
+                g.setColor(Color.BLACK);
+
+                int arrowSize = 10; // Adjust the size as needed
+                int arrowX = end.getX();
+                int arrowY = end.getY();
+
+                if(isDirected){
+                    drawArrow(g, start.getX(), start.getY(), arrowX, arrowY, arrowSize, nodeSize/2);
+                }
+                else {
+                    drawEdgeWeight(g, edge, start.getX(), start.getY(), end.getX(), end.getY());
+                }
+            }
+        }
     }
 
     public void drawEdges(Graphics g){

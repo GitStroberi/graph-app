@@ -94,6 +94,12 @@ public class EdgeManager {
         }
     }
 
+    public void unselectEdges() {
+        for(Edge edge : graphPanel.getEdges()) {
+            edge.unselect();
+        }
+    }
+
     public void toggleEdge() {
         if(selectedNodes.size() == 2) {
             //if there is already an edge between the two nodes, remove it

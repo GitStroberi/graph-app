@@ -285,7 +285,6 @@ public class AlgorithmManager {
     // If an edge is part of the shortest path, we call edge.select()
     public void runDjikstra(Node start, Node end){
         ArrayList<Node> nodes = graphPanel.getNodes();
-        ArrayList<Edge> edges = graphPanel.getEdges();
 
         System.out.printf("Running Dijkstra's algorithm from %s to %s\n", start.getLabel(), end.getLabel());
 
